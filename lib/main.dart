@@ -12,22 +12,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:upgrader/upgrader.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
 //function to listen background changes
 
 GetStorage box = GetStorage();
-Future _firebaseBackgroundMessage(RemoteMessage message) async {
-  //log("got notification background");
-}
+// Future _firebaseBackgroundMessage(RemoteMessage message) async {
+//   //log("got notification background");
+// }
 
 Future<void> main() async {
   Intl.defaultLocale == "de_DE";
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  //await Upgrader.clearSavedSettings();
-  await Firebase.initializeApp();
+  await Upgrader.clearSavedSettings();
+  // await Firebase.initializeApp();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -36,37 +37,37 @@ Future<void> main() async {
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
   //on background notification tapped
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    if (message.notification != null) {
-      //log("Background Notification Tapped");
-      if (box.read("login") == null) {
-        Get.offAllNamed('/');
-      } else {
-        Get.toNamed("/notification", arguments: message);
-        //navigatorKey.currentState!.pushNamed("/notification", arguments: message);
-      }
-    }
-  });
+  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //   if (message.notification != null) {
+  //     //log("Background Notification Tapped");
+  //     if (box.read("login") == null) {
+  //       Get.offAllNamed('/');
+  //     } else {
+  //       Get.toNamed("/notification", arguments: message);
+  //       //navigatorKey.currentState!.pushNamed("/notification", arguments: message);
+  //     }
+  //   }
+  // });
 
-  PushNotification().init();
-  PushNotification.local();
+  // PushNotification().init();
+  // PushNotification.local();
 
   //listen to backgorund notification
-  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
   //countCubit = BlocProvider.of<CountCubit>(context);
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    //map payload data
-    String payloadData = jsonEncode(message.data);
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+  //   //map payload data
+  //   String payloadData = jsonEncode(message.data);
 
-    if (message.notification != null) {
-      PushNotification.showSimpleNotification(
-          title: message.notification!.title ?? "WorksJoy",
-          body: message.notification!.body ?? "Notification from WroksJoy",
-          payload: payloadData);
-    }
-  });
+  //   if (message.notification != null) {
+  //     PushNotification.showSimpleNotification(
+  //         title: message.notification!.title ?? "Demo Notification",
+  //         body: message.notification!.body ?? "Notification from AeroDiary",
+  //         payload: payloadData);
+  //   }
+  // });
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -74,37 +75,37 @@ class MyApp extends StatelessWidget {
     super.key,
   });
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return
-        // UpgradeAlert(
-        //   child:
-        // );
-        ScreenUtilInit(
-      designSize: Size(360, 690),
-      // for web app
-      useInheritedMediaQuery: true,
-      //for keyboard not overlap
-      // //designSize: const Size(1080, 1920), //for android application
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, state) {
-        return GetMaterialApp(
-          navigatorKey: navigatorKey,
-          debugShowCheckedModeBanner: false,
-          initialRoute:
-              //'/onSitePunch',
-              box.read("authtoken") == null ? '/' : '/dashBoard',
-          getPages: [],
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-        );
-      },
+    return SafeArea(
+      child: UpgradeAlert(
+        child: ScreenUtilInit(
+          // designSize: Size(360, 690),
+          designSize: const Size(390, 844),
+          // for web app
+          useInheritedMediaQuery: true,
+          //for keyboard not overlap
+          // //designSize: const Size(1080, 1920), //for android application
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, state) {
+            return GetMaterialApp(
+              navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
+              // initialRoute:
+              //     //'/onSitePunch',
+              //     box.read("authtoken") == null ? '/' : '/dashBoard',
+              initialRoute: '/splash_screen',
+              getPages: Routes.pages,
+
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -56,7 +56,7 @@ class PushNotification {
     //log("intialize");
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@drawable/ic_launcher');
-    final DarwinInitializationSettings initializationSettingsDrawn =
+    const DarwinInitializationSettings initializationSettingsDrawn =
         DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -65,7 +65,7 @@ class PushNotification {
     );
     const LinuxInitializationSettings initializationSettingsLinux =
         LinuxInitializationSettings(defaultActionName: 'Open notification');
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
             android: initializationSettingsAndroid,
             iOS: initializationSettingsDrawn,
