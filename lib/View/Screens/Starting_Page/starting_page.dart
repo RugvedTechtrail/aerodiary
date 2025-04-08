@@ -12,70 +12,72 @@ class StartingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ConstColors.primary,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              Image.asset(
-                'assets/images/start.png',
-                width: double.infinity,
-                height: 580.h,
-                fit: BoxFit.fitWidth,
-              ),
-              Positioned(
-                left: 100.w,
-                top: 70.h,
-                child: ConstWidget.contText(
-                  "AeroDiary",
-                  style: GoogleFonts.content(
-                    fontWeight: FontWeight.w400,
-                    color: ConstColors.buttonColor,
-                    fontSize: 36.sp,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: ConstColors.primary,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
               children: [
-                ConstWidget.contText(
-                  'For Daily Asthama Care',
-                  style: getTextTheme().bodyMedium,
+                Image.asset(
+                  'assets/images/start.png',
+                  width: double.infinity,
+                  height: 580.h,
+                  fit: BoxFit.fitWidth,
                 ),
-                SizedBox(height: 10.h),
-                ConstWidget.contText(
-                  'Get to know your asthma condition by your daily asthma records ',
-                  style: getTextTheme().bodySmall,
-                ),
-                SizedBox(height: 10.h),
-                Center(
-                  child: ConstantButton(
-                    press: () {
-                      Get.toNamed('/welcome_page');
-                    },
-                    text: 'Get Started',
-                    color: ConstColors.buttonColor,
-                    bordercolor: ConstColors.buttonColor,
+                Positioned(
+                  left: 100.w,
+                  top: 70.h,
+                  child: ConstWidget.contText(
+                    "AeroDiary",
                     style: GoogleFonts.content(
-                      fontWeight: FontWeight.w300,
-                      color: ConstColors.white,
-                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400,
+                      color: ConstColors.buttonColor,
+                      fontSize: 36.sp,
                     ),
-                    height: 35.h,
-                    width: 320.w,
-                    vertiPadding: 25.h,
                   ),
                 ),
               ],
             ),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ConstWidget.contText(
+                    'For Daily Asthama Care',
+                    style: getTextTheme().bodyMedium,
+                  ),
+                  SizedBox(height: 10.h),
+                  ConstWidget.contText(
+                    'Get to know your asthma condition by your daily asthma records ',
+                    style: getTextTheme().bodySmall,
+                  ),
+                  SizedBox(height: 10.h),
+                  Center(
+                    child: ConstantButton(
+                      press: () {
+                        Get.toNamed('/welcome_page');
+                      },
+                      text: 'Get Started',
+                      color: ConstColors.buttonColor,
+                      bordercolor: ConstColors.buttonColor,
+                      style: GoogleFonts.content(
+                        fontWeight: FontWeight.w300,
+                        color: ConstColors.white,
+                        fontSize: 18.sp,
+                      ),
+                      height: 35.h,
+                      width: 320.w,
+                      vertiPadding: 25.h,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:aerodiary/View/Screens/Drugs_Page/View/drugs_page.dart';
 import 'package:aerodiary/View/Screens/Home_Page/View/home_page.dart';
 import 'package:aerodiary/View/Screens/Trends_Page/View/trends_screen.dart';
 import 'package:aerodiary/constants/const_colors.dart';
+import 'package:aerodiary/constants/custom_textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +19,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  int selectedIndex = 1; // Default to Home page
+  int selectedIndex = 0; // Default to Home page
   late PageController _pageController;
   late List<Widget> widgetOptions;
 
@@ -59,50 +60,59 @@ class _DashboardPageState extends State<DashboardPage> {
           children: widgetOptions,
         ),
         bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.black.withOpacity(0.1),
-              //     blurRadius: 10,
-              //     offset: const Offset(0, -5),
-              //   ),
-              // ],
-              ),
           child: BottomNavigationBar(
-            backgroundColor: ConstColors.white,
-            elevation: 10,
+            backgroundColor: ConstColors.primary,
+            elevation: 10.sp,
             type: BottomNavigationBarType.fixed,
             showSelectedLabels: true,
             showUnselectedLabels: true,
-            selectedLabelStyle: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
-            ),
-            unselectedItemColor: ConstColors.black.withOpacity(0.6),
+            unselectedItemColor: ConstColors.buttonColor,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined, size: 24.sp),
-                activeIcon: Icon(Icons.home, size: 24.sp),
+                icon: Icon(
+                  Icons.home_outlined,
+                  size: 26.sp,
+                  color: ConstColors.buttonColor,
+                ),
+                activeIcon: Icon(
+                  Icons.home_sharp,
+                  size: 26.sp,
+                  color: ConstColors.buttonColor,
+                ),
                 label: "Home",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.medication_outlined, size: 24.sp),
-                activeIcon: Icon(Icons.shield, size: 24.sp),
+                icon: Icon(
+                  Icons.shield_outlined,
+                  size: 26.sp,
+                  color: ConstColors.buttonColor,
+                ),
+                activeIcon: Icon(
+                  Icons.shield_sharp,
+                  size: 26.sp,
+                  color: ConstColors.buttonColor,
+                ),
                 label: "Drugs",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.trending_up_outlined, size: 24.sp),
-                activeIcon: Icon(Icons.pie_chart, size: 24.sp),
+                icon: Icon(
+                  Icons.pie_chart_outline,
+                  size: 26.sp,
+                  color: ConstColors.buttonColor,
+                ),
+                activeIcon: Icon(
+                  Icons.pie_chart_sharp,
+                  size: 26.sp,
+                  color: ConstColors.buttonColor,
+                ),
                 label: "Trends",
               ),
             ],
-            currentIndex: selectedIndex,
-            selectedItemColor: ConstColors.primary,
+            currentIndex: selectedIndex ?? 0,
+            selectedItemColor: ConstColors.buttonColor,
             onTap: onTabTapped,
+            selectedFontSize: 15.sp,
+            unselectedFontSize: 12.sp,
           ),
         ),
       ),
@@ -126,41 +136,31 @@ class _DashboardPageState extends State<DashboardPage> {
   exitDialog() {
     return showDialog(
       barrierDismissible: true,
-      barrierColor: ConstColors.primary.withOpacity(0.1),
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: ConstColors.buttonColor,
           title: Text(
             "Exit App",
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
+            style: getTextTheme().bodyLarge,
           ),
           content: Text(
             "Are you sure you want to exit the app?",
-            style: TextStyle(fontSize: 16.sp),
+            style: getTextTheme().bodyMedium,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
                 "Cancel",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
-                ),
+                style: getTextTheme().bodyMedium,
               ),
             ),
             TextButton(
               onPressed: () => exit(0),
               child: Text(
                 "Yes",
-                style: TextStyle(
-                  color: ConstColors.primary,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: getTextTheme().bodyMedium,
               ),
             ),
           ],

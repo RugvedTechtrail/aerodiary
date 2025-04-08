@@ -77,34 +77,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: UpgradeAlert(
-        child: ScreenUtilInit(
-          // designSize: Size(360, 690),
-          designSize: const Size(390, 844),
-          // for web app
-          useInheritedMediaQuery: true,
-          //for keyboard not overlap
-          // //designSize: const Size(1080, 1920), //for android application
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, state) {
-            return GetMaterialApp(
-              navigatorKey: navigatorKey,
-              debugShowCheckedModeBanner: false,
-              // initialRoute:
-              //     //'/onSitePunch',
-              //     box.read("authtoken") == null ? '/' : '/dashBoard',
-              initialRoute: '/splash_screen',
-              getPages: Routes.pages,
+    return UpgradeAlert(
+      child: ScreenUtilInit(
+        // designSize: Size(360, 690),
+        designSize: const Size(390, 844),
+        // for web app
+        useInheritedMediaQuery: true,
+        //for keyboard not overlap
+        // //designSize: const Size(1080, 1920), //for android application
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, state) {
+          return GetMaterialApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            // initialRoute:
+            //     //'/onSitePunch',
+            //     box.read("authtoken") == null ? '/' : '/dashBoard',
+            initialRoute: '/splash_screen',
+            getPages: Routes.pages,
 
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                useMaterial3: true,
-              ),
-            );
-          },
-        ),
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+          );
+        },
       ),
     );
   }

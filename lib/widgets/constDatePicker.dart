@@ -21,6 +21,7 @@ class ConstYearPicker extends StatefulWidget {
   final String hintText;
   final TextStyle? textStyle;
   final TextStyle? hintStyle;
+  final Color? iconColor;
 
   const ConstYearPicker({
     super.key,
@@ -34,6 +35,7 @@ class ConstYearPicker extends StatefulWidget {
     required this.hintText,
     this.textStyle,
     this.hintStyle,
+    this.iconColor,
   });
 
   @override
@@ -115,7 +117,7 @@ class ConstYearPickerState extends State<ConstYearPicker> {
                 suffixIcon: IconButton(
                   icon: Icon(
                     Icons.calendar_month_sharp,
-                    color: ConstColors.darkGrey,
+                    color: widget.iconColor ?? ConstColors.grey,
                     size: 25.sp,
                   ),
                   onPressed: () {
