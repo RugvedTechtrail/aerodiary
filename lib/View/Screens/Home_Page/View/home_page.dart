@@ -909,6 +909,84 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Widget _buildConditionItem(PatientHistoryController controller, int index) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0.h),
+      child: InkWell(
+        onTap: () => controller.toggleCondition(index),
+        child: Row(
+          children: [
+            Obx(() {
+              final condition = controller.conditions[index];
+              return Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: condition.isSelected.value
+                        ? const Color(0xFF4BA8A5)
+                        : Colors.grey[400]!,
+                    width: 2,
+                  ),
+                ),
+                child: condition.isSelected.value
+                    ? Center(
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF4BA8A5),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      )
+                    : null,
+              );
+            }),
+            SizedBox(width: 10.w),
+            Obx(() {
+              final condition = controller.conditions[index];
+              return Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      condition.name,
+                      style: getTextTheme(
+                        color: ConstColors.darkGrey,
+                      ).bodyMedium,
+                    ),
+                    if (condition.isSelected.value)
+                      Padding(
+                        padding: EdgeInsets.only(top: 4.h),
+                        child: condition.conditionFromDate.value != null &&
+                                condition.dateConfirmed.value
+                            ? Text(
+                                'Since: ${controller.dateFormat.format(condition.conditionFromDate.value!)}',
+                                style: getTextTheme(
+                                  color: ConstColors.darkGrey.withOpacity(0.7),
+                                  fontSize: 12.sp,
+                                ).bodySmall,
+                              )
+                            : Text(
+                                'Select date',
+                                style: getTextTheme(
+                                  color: ConstColors.grey,
+                                  fontSize: 12.sp,
+                                ).bodySmall,
+                              ),
+                      ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildConditionsPage(PatientHistoryController controller) {
     return SingleChildScrollView(
       child: Column(
@@ -1056,54 +1134,6 @@ class HomePage extends StatelessWidget {
             ).bodyMedium,
           )
         ],
-      ),
-    );
-  }
-
-  Widget _buildConditionItem(PatientHistoryController controller, int index) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.h),
-      child: InkWell(
-        onTap: () => controller.toggleCondition(index),
-        child: Row(
-          children: [
-            Obx(() {
-              final condition = controller.conditions[index];
-              return Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: condition.isSelected.value
-                        ? const Color(0xFF4BA8A5)
-                        : Colors.grey[400]!,
-                    width: 2,
-                  ),
-                ),
-                child: condition.isSelected.value
-                    ? Center(
-                        child: Container(
-                          width: 12,
-                          height: 12,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF4BA8A5),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      )
-                    : null,
-              );
-            }),
-            SizedBox(width: 10.w),
-            Text(
-              controller.conditions[index].name,
-              style: getTextTheme(
-                color: ConstColors.darkGrey,
-              ).bodyMedium,
-            ),
-          ],
-        ),
       ),
     );
   }

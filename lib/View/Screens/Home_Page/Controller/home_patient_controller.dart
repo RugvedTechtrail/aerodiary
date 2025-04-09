@@ -1,7 +1,15 @@
 import 'dart:developer';
 
+import 'package:aerodiary/constants/const_colors.dart';
+import 'package:aerodiary/constants/custom_textstyle.dart';
+import 'package:aerodiary/widgets/constDatePicker.dart';
+import 'package:aerodiary/widgets/constTextField.dart';
+import 'package:aerodiary/widgets/const_button.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 // class ConditionItem {
 //   final String name;
@@ -114,9 +122,15 @@ import 'package:flutter/material.dart';
 class ConditionItem {
   final String name;
   RxBool isSelected;
+  Rx<DateTime?> conditionFromDate;
+  Rx<TextEditingController> dateController;
+  RxBool dateConfirmed; // Add this new flag to track if date was confirmed
 
   ConditionItem({required this.name, required bool selected})
-      : isSelected = selected.obs;
+      : isSelected = selected.obs,
+        conditionFromDate = Rx<DateTime?>(null),
+        dateController = TextEditingController().obs,
+        dateConfirmed = false.obs;
 }
 
 class PatientHistoryController extends GetxController {
@@ -131,9 +145,12 @@ class PatientHistoryController extends GetxController {
   ].obs;
 
   // Controller for the "Other" text field
-
   Rx<TextEditingController> otherConditionController =
       TextEditingController().obs;
+
+  // Format date to display in text field
+  final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+
   // Flag to show/hide the "Other" text field
   final RxBool showOtherTextField = false.obs;
 
@@ -155,6 +172,10 @@ class PatientHistoryController extends GetxController {
   @override
   void onClose() {
     otherConditionController.value.dispose();
+    // Dispose all date controllers
+    for (var condition in conditions) {
+      condition.dateController.value.dispose();
+    }
     pageController.dispose();
     super.onClose();
   }
@@ -173,17 +194,234 @@ class PatientHistoryController extends GetxController {
   }
 
   void toggleCondition(int index) {
-    conditions[index].isSelected.toggle();
+    final condition = conditions[index];
+    // Toggle selection
+    condition.isSelected.toggle();
+
+    // If the condition is unselected, also reset the date and confirmation
+    if (!condition.isSelected.value) {
+      condition.conditionFromDate.value = null;
+      condition.dateController.value.clear();
+      condition.dateConfirmed.value = false;
+    }
+
+    // If the condition is selected and it's not "Other", show date picker dialog
+    if (condition.isSelected.value && condition.name != 'Other') {
+      _showDatePickerDialog(index);
+    }
 
     // If "Other" is selected or unselected, update the text field visibility
-    if (conditions[index].name == 'Other') {
-      showOtherTextField.value = conditions[index].isSelected.value;
+    if (condition.name == 'Other') {
+      showOtherTextField.value = condition.isSelected.value;
       if (!showOtherTextField.value) {
         otherConditionController.value.clear();
       }
     }
-    log('Selected condition is ${conditions[index].name}');
+
+    log('Selected condition is ${condition.name}');
     update(['conditions_list']);
+  }
+
+  void _showDatePickerDialog(int index) {
+    final condition = conditions[index];
+    final formKey = GlobalKey<FormState>();
+
+    // Store original values to restore if canceled
+    final originalDate = condition.conditionFromDate.value;
+    final originalConfirmed = condition.dateConfirmed.value;
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  color: ConstColors.blue,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 24.w,
+                          height: 24.h,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Container(
+                              width: 16.w,
+                              height: 16.h,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Text(
+                          'Selected : ${condition.name}',
+                          style: getTextTheme().bodyMedium,
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        // If canceled and no previous date was confirmed, unselect the condition
+                        if (!originalConfirmed) {
+                          condition.isSelected.value = false;
+                        } else {
+                          // Restore original values if there was a previously confirmed date
+                          condition.conditionFromDate.value = originalDate;
+                          condition.dateConfirmed.value = originalConfirmed;
+                        }
+                        Get.back();
+                        update(['conditions_list']);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                  bottom: 20.h,
+                  left: 10.w,
+                  right: 10.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10.sp),
+                    bottomRight: Radius.circular(10.sp),
+                  ),
+                  color: ConstColors.grey.withOpacity(0.3),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+                      child: Text(
+                        'Since when are you having ${condition.name}?',
+                        style: getTextTheme(
+                          color: ConstColors.darkGrey,
+                        ).bodyMedium,
+                      ),
+                    ),
+                    ConstYearPicker(
+                      controller: condition.dateController.value,
+                      hintText: 'Select Date',
+                      textStyle: GoogleFonts.content(
+                        fontWeight: FontWeight.w400,
+                        color: ConstColors.darkGrey,
+                        fontSize: 16.sp,
+                      ),
+                      hintStyle: GoogleFonts.content(
+                        fontWeight: FontWeight.w400,
+                        color: ConstColors.grey,
+                        fontSize: 16.sp,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a date';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        // Parse the date from the format returned by ConstYearPicker (yyyy-MM-dd)
+                        condition.conditionFromDate.value =
+                            DateTime.parse(value);
+                        // Format it according to your desired format (dd/MM/yyyy)
+                        condition.dateController.value.text = dateFormat
+                            .format(condition.conditionFromDate.value!);
+                      },
+                      onSaved: (p0) {},
+                      iconColor: ConstColors.darkGrey,
+                    ),
+                    ConstantButton(
+                      height: 45.h,
+                      horiPadding: 15.w,
+                      vertiPadding: 40.h,
+                      press: () {
+                        if (formKey.currentState?.validate() ?? false) {
+                          if (condition.conditionFromDate.value != null) {
+                            // Mark date as confirmed only when Done is clicked and date is selected
+                            condition.dateConfirmed.value = true;
+                            Get.back();
+                            update(['conditions_list']);
+                          } else {
+                            // Show error or fallback behavior
+                            Get.snackbar(
+                              'Error',
+                              'Please select a date first',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
+                        }
+                      },
+                      text: "Done",
+                      borderRadius: 8.sp,
+                      color: ConstColors.buttonColor,
+                      bordercolor: ConstColors.buttonColor,
+                      style: getTextTheme(
+                        fontWeight: FontWeight.w500,
+                      ).bodyMedium,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Method to select date
+
+  List<Map<String, dynamic>> getSelectedConditionsWithDates() {
+    final selectedConditionsWithDates =
+        conditions.where((c) => c.isSelected.value).map((c) {
+      if (c.name == 'Other') {
+        return {
+          'name': 'Other: ${otherConditionController.value.text}',
+          'date': c.conditionFromDate.value,
+          'dateString': c.conditionFromDate.value != null
+              ? dateFormat.format(c.conditionFromDate.value!)
+              : null,
+        };
+      } else {
+        return {
+          'name': c.name,
+          'date': c.conditionFromDate.value,
+          'dateString': c.conditionFromDate.value != null
+              ? dateFormat.format(c.conditionFromDate.value!)
+              : null,
+        };
+      }
+    }).toList();
+
+    log('Selected conditions with dates: $selectedConditionsWithDates');
+    return selectedConditionsWithDates;
   }
 
   List<String> getSelectedConditions() {
@@ -201,8 +439,9 @@ class PatientHistoryController extends GetxController {
   void goToNextPage() {
     // Process selected conditions if needed
     if (currentPageIndex.value == 0) {
-      List<String> selectedConditions = getSelectedConditions();
-      log('Selected conditions: $selectedConditions');
+      List<Map<String, dynamic>> selectedConditionsWithDates =
+          getSelectedConditionsWithDates();
+      log('Selected conditions with dates: $selectedConditionsWithDates');
     }
 
     // Check if we're not on the last page
