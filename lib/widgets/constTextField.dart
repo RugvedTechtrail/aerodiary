@@ -27,6 +27,7 @@ class ConstTextField extends StatelessWidget {
   final Color? color;
   final TextStyle? textStyle;
   final TextStyle? hintStyle;
+  final AutovalidateMode? autovalidateMode;
   const ConstTextField(
       {super.key,
 
@@ -48,6 +49,7 @@ class ConstTextField extends StatelessWidget {
       this.keyoardType,
       this.textStyle,
       this.hintStyle,
+      this.autovalidateMode,
       this.mandatoryTitle = ''});
 
   @override
@@ -65,6 +67,7 @@ class ConstTextField extends StatelessWidget {
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus?.unfocus();
             },
+            autovalidateMode: autovalidateMode,
             style: textStyle ?? getTextTheme().headlineSmall,
             cursorColor: ConstColors.black,
             maxLines: maxline,

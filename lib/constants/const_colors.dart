@@ -10,10 +10,11 @@ class ConstColors {
   static const Color darkgreen = Color(0xff136161);
   static const Color orange = Color(0xFFFFB800);
   static const Color purp = Color(0xFF8F00FF);
+  static const Color snack = Color(0xFF136161);
 
   static const Color lightgreen = Color(0xFFBAFFC9);
   static const buttonColor = Color(0xFF419B9F);
-  static const Color blue = Color.fromARGB(255, 75, 159, 255);
+  static const Color blue = Color(0xFF0075FF);
   static const Color lightBlue = Color(0xFF8CD2D9);
   static const Color darkBlue = Color.fromARGB(255, 0, 86, 184);
   static const Color bgColor = Color(0xFFF2F2F2);

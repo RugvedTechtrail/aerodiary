@@ -377,55 +377,55 @@ class PatientScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Move the formKey to the controller so it's accessible for validation
-    return Scaffold(
-      backgroundColor: ConstColors.primary,
-      appBar: AppBar(
-        surfaceTintColor: ConstColors.primary,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text(
-          'AeroDiary',
-          style: getTextTheme(fontWeight: FontWeight.w400, fontSize: 24)
-              .headlineLarge,
-        ),
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: ConstColors.primary,
-        elevation: 0,
-      ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.arrow_left,
-                    color: ConstColors.buttonColor,
-                    size: 45.sp,
-                  ),
-                  Text(
-                    'Add Patient Data',
-                    style: getTextTheme().bodyLarge,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
+        appBar: AppBar(
+          surfaceTintColor: ConstColors.primary,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text(
+            'AeroDiary',
+            style: getTextTheme(fontWeight: FontWeight.w400, fontSize: 24)
+                .headlineLarge,
+          ),
+          backgroundColor: ConstColors.primary,
+          elevation: 0,
+        ),
+        body: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10.w),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.arrow_left,
+                      color: ConstColors.buttonColor,
+                      size: 45.sp,
+                    ),
+                    Text(
+                      'Add Patient Data',
+                      style: getTextTheme().bodyLarge,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
 
-              // Form fields
-              GetBuilder(
-                  id: 'login',
-                  init: PatientController(),
-                  builder: (controller) {
-                    return Form(
-                      key: controller
-                          .formKey, // Use the form key from the controller
-                      autovalidateMode: AutovalidateMode
-                          .onUserInteraction, // Enable auto-validation
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            ConstTextField(
+                // Form fields
+                GetBuilder(
+                    id: 'login',
+                    init: PatientController(),
+                    builder: (controller) {
+                      return Form(
+                        key: controller
+                            .formKey, // Use the form key from the controller
+
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ConstTextField(
                                 customText: 'First Name',
                                 hintStyle: GoogleFonts.content(
                                   fontWeight: FontWeight.w400,
@@ -448,329 +448,345 @@ class PatientScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.firstNameController.value.text =
                                       value;
-                                  controller.formKey.currentState
-                                      ?.validate(); // Validate on change
+                                  // controller.formKey.currentState
+                                  //     ?.validate(); // Validate on change
                                   controller.update(["login"]);
                                 },
                                 onSaved: (p0) {
                                   controller.updateFName(p0 ?? '');
-                                }),
-
-                            //
-
-                            ConstTextField(
-                              customText: 'Last Name',
-                              hintStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.grey,
-                                fontSize: 16.sp,
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                               ),
-                              textStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.darkGrey,
-                                fontSize: 16.sp,
-                              ),
-                              controller:
-                                  controller.lastNameControllerNew.value,
-                              validator: controller.validateLastName,
-                              keyoardType: TextInputType.emailAddress,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp(
-                                    '[a-zA-Z0-9@#£_&-+.()\$/*":;!?€¥¢^=-]')),
-                              ],
-                              onChanged: (value) {
-                                controller.lastNameControllerNew.value.text =
-                                    value;
-                                controller.formKey.currentState
-                                    ?.validate(); // Validate on change
-                                controller.update(["login"]);
-                              },
-                              onSaved: (p0) {
-                                controller.updateLName(p0 ?? '');
-                              },
-                            ),
 
-                            ConstYearPicker(
-                              hintText: 'Date of Birth',
-                              hintStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.grey,
-                                fontSize: 16.sp,
-                              ),
-                              textStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.darkGrey,
-                                fontSize: 16.sp,
-                              ),
-                              controller:
-                                  controller.dateOfBirthController.value,
-                              validator: controller.validateDateOfBirth,
-                              iconColor: ConstColors.darkGrey.withOpacity(0.6),
-                              onChanged: (value) {
-                                controller.dateOfBirthController.value.text =
-                                    value;
-                                controller.formKey.currentState
-                                    ?.validate(); // Validate on change
-                                controller.update(["login"]);
-                              },
-                              onSaved: (p0) {
-                                controller.updateDob(p0 ?? '');
-                              },
-                              mandatoryTitle: "Date of Birth",
-                            ),
-
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 5.h),
-                              child: DropdownButtonFormField<String>(
-                                value: controller.gender.value.isEmpty
-                                    ? null
-                                    : controller.gender.value,
-                                validator: controller.validateGender,
-                                icon: const SizedBox(),
-                                decoration: InputDecoration(
-                                  suffixIcon: Icon(
-                                    Icons.arrow_drop_down_sharp,
-                                    color:
-                                        ConstColors.darkGrey.withOpacity(0.6),
-                                    size: 45.sp,
-                                  ),
-                                  fillColor: ConstColors.white,
-                                  filled: true,
-                                  disabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      color: ConstColors.white,
-                                    ),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      color: ConstColors.red,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      color: ConstColors.white,
-                                    ),
-                                  ),
-                                  errorStyle: GoogleFonts.content(
-                                    height: 0.sp,
-                                    color: ConstColors.red,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  hintText: 'Gender',
-                                  hintStyle: GoogleFonts.content(
-                                    fontWeight: FontWeight.w400,
-                                    color: ConstColors.grey,
-                                    fontSize: 16.sp,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 5.h, horizontal: 10.w),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      color: ConstColors.white,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      color: ConstColors.white,
-                                    ),
-                                  ),
+                              ConstTextField(
+                                customText: 'Last Name',
+                                hintStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.grey,
+                                  fontSize: 16.sp,
                                 ),
-                                items: controller.genderOptions
-                                    .map<DropdownMenuItem<String>>((value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: GoogleFonts.content(
-                                        fontWeight: FontWeight.w400,
-                                        color: ConstColors.darkGrey,
-                                        fontSize: 16.sp,
+                                textStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.darkGrey,
+                                  fontSize: 16.sp,
+                                ),
+                                controller:
+                                    controller.lastNameControllerNew.value,
+                                validator: controller.validateLastName,
+                                keyoardType: TextInputType.emailAddress,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(RegExp(
+                                      '[a-zA-Z0-9@#£_&-+.()\$/*":;!?€¥¢^=-]')),
+                                ],
+                                onChanged: (value) {
+                                  controller.lastNameControllerNew.value.text =
+                                      value;
+                                  controller.validateSpecificField('lastName');
+
+                                  controller.update(["login"]);
+                                },
+                                onSaved: (p0) {
+                                  controller.updateLName(p0 ?? '');
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                              ),
+
+                              ConstYearPicker(
+                                hintText: 'Date of Birth',
+                                hintStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.grey,
+                                  fontSize: 16.sp,
+                                ),
+                                textStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.darkGrey,
+                                  fontSize: 16.sp,
+                                ),
+                                controller:
+                                    controller.dateOfBirthController.value,
+                                validator: controller.validateDateOfBirth,
+                                iconColor:
+                                    ConstColors.darkGrey.withOpacity(0.6),
+                                onChanged: (value) {
+                                  controller.dateOfBirthController.value.text =
+                                      value;
+                                  controller.validateSpecificField('dob');
+                                  controller.update(["login"]);
+                                },
+                                onSaved: (p0) {
+                                  controller.validateSpecificField('dob');
+                                  controller.updateDob(p0 ?? '');
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                mandatoryTitle: "Date of Birth",
+                              ),
+
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 5.h),
+                                child: DropdownButtonFormField<String>(
+                                  value: controller.gender.value.isEmpty
+                                      ? null
+                                      : controller.gender.value,
+                                  validator: controller.validateGender,
+                                  icon: const SizedBox(),
+                                  decoration: InputDecoration(
+                                    suffixIcon: Icon(
+                                      Icons.arrow_drop_down_sharp,
+                                      color:
+                                          ConstColors.darkGrey.withOpacity(0.6),
+                                      size: 45.sp,
+                                    ),
+                                    fillColor: ConstColors.white,
+                                    filled: true,
+                                    disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                        color: ConstColors.white,
                                       ),
                                     ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    controller.gender.value = value;
-                                    controller.formKey.currentState
-                                        ?.validate(); // Validate on change
-                                    controller.update(["login"]);
-                                  }
-                                },
-                                onSaved: (newValue) {
-                                  controller.updateGender(newValue ?? '');
-                                },
-                              ),
-                            ),
-                            // Email
-                            ConstTextField(
-                              customText: 'Email',
-                              hintStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.grey,
-                                fontSize: 16.sp,
-                              ),
-                              textStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.darkGrey,
-                                fontSize: 16.sp,
-                              ),
-                              controller: controller.emailController.value,
-                              validator: controller.validateEmail,
-                              keyoardType: TextInputType.emailAddress,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp(
-                                    '[a-zA-Z0-9@#£_&-+.()\$/*":;!?€¥¢^=-]')),
-                              ],
-                              onChanged: (value) {
-                                controller.emailController.value.text = value;
-                                controller.formKey.currentState
-                                    ?.validate(); // Validate on change
-                                controller.update(["login"]);
-                              },
-                              onSaved: (p0) {
-                                controller.updateEmail(p0 ?? '');
-                              },
-                            ),
-
-                            // Mobile
-                            ConstTextField(
-                              customText: 'Mobile',
-                              hintStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.grey,
-                                fontSize: 16.sp,
-                              ),
-                              textStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.darkGrey,
-                                fontSize: 16.sp,
-                              ),
-                              controller:
-                                  controller.mobileNumberController.value,
-                              validator: controller.validateMobile,
-                              keyoardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(10),
-                              ],
-                              onChanged: (value) {
-                                controller.mobileNumberController.value.text =
-                                    value;
-                                controller.formKey.currentState
-                                    ?.validate(); // Validate on change
-                                controller.update(["login"]);
-                              },
-                              onSaved: (p0) {
-                                controller.updateMobile(p0 ?? '');
-                              },
-                            ),
-
-                            // OTP
-                            ConstTextField(
-                              customText: 'Otp',
-                              hintStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.grey,
-                                fontSize: 16.sp,
-                              ),
-                              textStyle: GoogleFonts.content(
-                                fontWeight: FontWeight.w400,
-                                color: ConstColors.darkGrey,
-                                fontSize: 16.sp,
-                              ),
-                              controller: controller.otpControllerNew.value,
-                              validator: controller.validateOTP,
-                              keyoardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              onChanged: (value) {
-                                controller.otpControllerNew.value.text = value;
-                                controller.formKey.currentState
-                                    ?.validate(); // Validate on change
-                                controller.update(["login"]);
-                              },
-                              onSaved: (p0) {
-                                controller.updateOtp(p0 ?? '');
-                              },
-                            ),
-
-                            AnimatedContainer(
-                              margin: EdgeInsets.symmetric(vertical: 55.h),
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
-                              width: controller.isLoading.value ? 60.w : 360.w,
-                              height: 42
-                                  .h, // Match this with the ConstantButton height
-                              decoration: BoxDecoration(
-                                color: controller.isLoading.value
-                                    ? ConstColors.primary
-                                    : ConstColors.buttonColor,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: controller.isLoading.value
-                                  ? Center(
-                                      child: SizedBox(
-                                        height: 32.h,
-                                        width: 32.w,
-                                        child: LoadingIndicator(
-                                          indicatorType:
-                                              Indicator.ballRotateChase,
-                                          colors: const [ConstColors.white],
-                                          strokeWidth: 5.sp,
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                        color: ConstColors.red,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                        color: ConstColors.white,
+                                      ),
+                                    ),
+                                    errorStyle: GoogleFonts.content(
+                                      height: 0.sp,
+                                      color: ConstColors.red,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    hintText: 'Gender',
+                                    hintStyle: GoogleFonts.content(
+                                      fontWeight: FontWeight.w400,
+                                      color: ConstColors.grey,
+                                      fontSize: 16.sp,
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 5.h, horizontal: 10.w),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                        color: ConstColors.white,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                        color: ConstColors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  items: controller.genderOptions
+                                      .map<DropdownMenuItem<String>>((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: GoogleFonts.content(
+                                          fontWeight: FontWeight.w400,
+                                          color: ConstColors.darkGrey,
+                                          fontSize: 16.sp,
                                         ),
                                       ),
-                                    )
-                                  : ConstantButton(
-                                      press: () {
-                                        if (controller.formKey.currentState!
-                                            .validate()) {
-                                          controller.formKey.currentState!
-                                              .save();
-                                          // Continue with your form submission logic
-                                          controller.login();
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      controller.gender.value = value;
+                                      // controller.formKey.currentState
+                                      //     ?.validate(); // Validate on change
+                                      controller.update(["login"]);
+                                    }
+                                  },
+                                  onSaved: (newValue) {
+                                    controller.updateGender(newValue ?? '');
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                ),
+                              ),
+                              // Email
+                              ConstTextField(
+                                customText: 'Email',
+                                hintStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.grey,
+                                  fontSize: 16.sp,
+                                ),
+                                textStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.darkGrey,
+                                  fontSize: 16.sp,
+                                ),
+                                controller: controller.emailController.value,
+                                validator: controller.validateEmail,
+                                keyoardType: TextInputType.emailAddress,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(RegExp(
+                                      '[a-zA-Z0-9@#£_&-+.()\$/*":;!?€¥¢^=-]')),
+                                ],
+                                onChanged: (value) {
+                                  controller.emailController.value.text = value;
+                                  // controller.formKey.currentState
+                                  //     ?.validate(); // Validate on change
+                                  controller.update(["login"]);
+                                },
+                                onSaved: (p0) {
+                                  controller.updateEmail(p0 ?? '');
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                              ),
 
-                                          //Get.toNamed('/dashboard_screen');
-                                        } else {
-                                          Get.snackbar(
-                                            "User Alert",
-                                            "Please enter all the fields",
-                                            backgroundColor: ConstColors
-                                                .buttonColor
-                                                .withOpacity(0.8),
-                                            colorText: ConstColors.white,
-                                            snackStyle: SnackStyle.FLOATING,
-                                            margin: EdgeInsets.symmetric(
-                                              vertical: 10.h,
-                                              horizontal: 8.w,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      text: 'Done',
-                                      color: ConstColors.buttonColor,
-                                      bordercolor: ConstColors
-                                          .buttonColor, // Make transparent to avoid double borders
-                                      borderRadius: 10.sp,
-                                      height: 45.h,
-                                      style: getTextTheme().bodyMedium,
-                                    ),
-                            )
+                              // Mobile
+                              ConstTextField(
+                                customText: 'Mobile',
+                                hintStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.grey,
+                                  fontSize: 16.sp,
+                                ),
+                                textStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.darkGrey,
+                                  fontSize: 16.sp,
+                                ),
+                                controller:
+                                    controller.mobileNumberController.value,
+                                validator: controller.validateMobile,
+                                keyoardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10),
+                                ],
+                                onChanged: (value) {
+                                  controller.mobileNumberController.value.text =
+                                      value;
+                                  // controller.formKey.currentState
+                                  //     ?.validate(); // Validate on change
+                                  controller.update(["login"]);
+                                },
+                                onSaved: (p0) {
+                                  controller.updateMobile(p0 ?? '');
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                              ),
 
-                            // Done Button
-                          ],
+                              // OTP
+                              ConstTextField(
+                                customText: 'Otp',
+                                hintStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.grey,
+                                  fontSize: 16.sp,
+                                ),
+                                textStyle: GoogleFonts.content(
+                                  fontWeight: FontWeight.w400,
+                                  color: ConstColors.darkGrey,
+                                  fontSize: 16.sp,
+                                ),
+                                controller: controller.otpControllerNew.value,
+                                validator: controller.validateOTP,
+                                keyoardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                onChanged: (value) {
+                                  controller.otpControllerNew.value.text =
+                                      value;
+                                  // controller.formKey.currentState
+                                  //     ?.validate(); // Validate on change
+                                  controller.update(["login"]);
+                                },
+                                onSaved: (p0) {
+                                  controller.updateOtp(p0 ?? '');
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                              ),
+
+                              AnimatedContainer(
+                                margin: EdgeInsets.symmetric(vertical: 55.h),
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                                width:
+                                    controller.isLoading.value ? 60.w : 360.w,
+                                height: 42
+                                    .h, // Match this with the ConstantButton height
+                                decoration: BoxDecoration(
+                                  color: controller.isLoading.value
+                                      ? ConstColors.primary
+                                      : ConstColors.buttonColor,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: controller.isLoading.value
+                                    ? Center(
+                                        child: SizedBox(
+                                          height: 32.h,
+                                          width: 32.w,
+                                          child: LoadingIndicator(
+                                            indicatorType:
+                                                Indicator.ballRotateChase,
+                                            colors: const [ConstColors.white],
+                                            strokeWidth: 5.sp,
+                                          ),
+                                        ),
+                                      )
+                                    : ConstantButton(
+                                        press: () {
+                                          if (controller.formKey.currentState!
+                                              .validate()) {
+                                            controller.formKey.currentState!
+                                                .save();
+                                            // Continue with your form submission logic
+                                            controller.login();
+
+                                            //Get.toNamed('/dashboard_screen');
+                                          } else {
+                                            Get.snackbar(
+                                              "User Alert !",
+                                              "Please enter all the fields",
+                                              backgroundColor: ConstColors.snack
+                                                  .withOpacity(0.8),
+                                              colorText: ConstColors.white,
+                                              snackStyle: SnackStyle.FLOATING,
+                                              margin: EdgeInsets.symmetric(
+                                                vertical: 10.h,
+                                                horizontal: 8.w,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        text: 'Done',
+                                        color: ConstColors.buttonColor,
+                                        bordercolor: ConstColors
+                                            .buttonColor, // Make transparent to avoid double borders
+                                        borderRadius: 10.sp,
+                                        height: 45.h,
+                                        style: getTextTheme().bodyMedium,
+                                      ),
+                              )
+
+                              // Done Button
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-            ],
+                      );
+                    }),
+              ],
+            ),
           ),
         ),
       ),

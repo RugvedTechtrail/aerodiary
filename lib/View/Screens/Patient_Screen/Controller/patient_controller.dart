@@ -216,9 +216,35 @@ class PatientController extends GetxController {
     super.onClose();
   }
 
+  void validateSpecificField(String fieldName) {
+    // This method uses AutovalidateMode.disabled, so we need to manually trigger validation
+    // for the specific field by using field-specific controllers
+
+    // Create a validator map that connects field names to their validation functions
+    final validators = {
+      'firstName': () => validateFirstName(firstNameController.value.text),
+      'lastName': () => validateLastName(lastNameControllerNew.value.text),
+      'dob': () => validateDateOfBirth(dateOfBirthController.value.text),
+      'gender': () => validateGender(gender.value),
+      'email': () => validateEmail(emailController.value.text),
+      'mobile': () => validateMobile(mobileNumberController.value.text),
+      'otp': () => validateOTP(otpControllerNew.value.text),
+    };
+
+    // Only validate the specified field and update the form
+    if (validators.containsKey(fieldName)) {
+      validators[fieldName]!();
+    }
+
+    // We're not calling formKey.currentState?.validate() here
+    // as that would validate all fields
+  }
+
   String? validateFirstName(String? value) {
     if (value == null || value.isEmpty) {
       return 'First name is required';
+    } else if (value.length < 3) {
+      return 'First name must be at least 3 characters';
     }
     return null;
   }
@@ -231,9 +257,10 @@ class PatientController extends GetxController {
   }
 
   String? validateDateOfBirth(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == "" || value == null || value.isEmpty) {
       return 'Date of birth is required';
     }
+    // If we reach here, the date is valid
     return null;
   }
 

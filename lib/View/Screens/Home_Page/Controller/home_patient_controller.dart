@@ -131,9 +131,9 @@ class PatientHistoryController extends GetxController {
   ].obs;
 
   // Controller for the "Other" text field
-  final TextEditingController otherConditionController =
-      TextEditingController();
 
+  Rx<TextEditingController> otherConditionController =
+      TextEditingController().obs;
   // Flag to show/hide the "Other" text field
   final RxBool showOtherTextField = false.obs;
 
@@ -154,9 +154,22 @@ class PatientHistoryController extends GetxController {
 
   @override
   void onClose() {
-    otherConditionController.dispose();
+    otherConditionController.value.dispose();
     pageController.dispose();
     super.onClose();
+  }
+
+  String? validateOther(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the diseases';
+    }
+
+    return null;
+  }
+
+  void updateOther(String value) {
+    otherConditionController.value.text = value;
+    update(["conditions_list"]);
   }
 
   void toggleCondition(int index) {
@@ -166,7 +179,7 @@ class PatientHistoryController extends GetxController {
     if (conditions[index].name == 'Other') {
       showOtherTextField.value = conditions[index].isSelected.value;
       if (!showOtherTextField.value) {
-        otherConditionController.clear();
+        otherConditionController.value.clear();
       }
     }
     log('Selected condition is ${conditions[index].name}');
@@ -177,8 +190,9 @@ class PatientHistoryController extends GetxController {
     final selectedConditions =
         conditions.where((c) => c.isSelected.value).map((c) => c.name).toList();
 
-    if (showOtherTextField.value && otherConditionController.text.isNotEmpty) {
-      selectedConditions.add('Other: ${otherConditionController.text}');
+    if (showOtherTextField.value &&
+        otherConditionController.value.text.isNotEmpty) {
+      selectedConditions.add('Other: ${otherConditionController.value.text}');
     }
     log('selected condion is $selectedConditions');
     return selectedConditions;

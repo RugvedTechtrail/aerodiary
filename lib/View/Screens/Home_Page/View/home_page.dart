@@ -1,9 +1,13 @@
-import 'package:aerodiary/View/Screens/Home_Page/Controller/patient_controller.dart';
+import 'package:aerodiary/View/Screens/Home_Page/Controller/home_patient_controller.dart';
 import 'package:aerodiary/constants/const_colors.dart';
 import 'package:aerodiary/constants/custom_textstyle.dart';
+import 'package:aerodiary/widgets/constTextField.dart';
+import 'package:aerodiary/widgets/const_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // class HomePage extends StatelessWidget {
 //   const HomePage({super.key});
@@ -816,46 +820,48 @@ class HomePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.sp),
             color: ConstColors.white,
           ),
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Back Button with "Add Patient History" text
-              Row(
-                children: [
-                  Icon(
-                    Icons.arrow_left,
-                    color: ConstColors.primary,
-                    size: 35.sp,
-                  ),
-                  const SizedBox(width: 8),
-                  Text('Add Patient History',
-                      style: getTextTheme(color: ConstColors.primary)
-                          .headlineMedium),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // Progress indicator
-              Obx(() => LinearProgressIndicator(
-                    value: (controller.currentPageIndex.value + 1) /
-                        controller.totalPages,
-                    backgroundColor: Colors.grey[200],
-                    valueColor:
-                        const AlwaysStoppedAnimation<Color>(Color(0xFF4BA8A5)),
-                  )),
-
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Obx(() => Text(
-                      'Step ${controller.getCurrentPageNumber()} of ${controller.totalPages}',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    )),
+                padding: EdgeInsets.symmetric(
+                  vertical: 15.h,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.arrow_left,
+                      color: ConstColors.primary,
+                      size: 35.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text('Add Patient History',
+                        style: getTextTheme(color: ConstColors.primary)
+                            .headlineMedium),
+                  ],
+                ),
               ),
-
+              // const SizedBox(height: 24),
+              // // Progress indicator
+              // Obx(() => LinearProgressIndicator(
+              //       value: (controller.currentPageIndex.value + 1) /
+              //           controller.totalPages,
+              //       backgroundColor: Colors.grey[200],
+              //       valueColor:
+              //           const AlwaysStoppedAnimation<Color>(Color(0xFF4BA8A5)),
+              //     )),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+              //   child: Obx(() => Text(
+              //         'Step ${controller.getCurrentPageNumber()} of ${controller.totalPages}',
+              //         style: TextStyle(
+              //           color: Colors.grey[600],
+              //           fontSize: 14,
+              //         ),
+              //       )),
+              // ),
               // Main Content with PageView for sliding animation
               Expanded(
                 child: PageView(
@@ -904,134 +910,201 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildConditionsPage(PatientHistoryController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Header section with green background
-        Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFF0C7872),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header section with green background
+          Container(
+            decoration: const BoxDecoration(
+              color: ConstColors.buttonColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
             ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Left side - Radio button and text
-              Row(
-                children: [
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Container(
-                        width: 16,
-                        height: 16,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 24.w,
+                      height: 24.h,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Container(
+                          width: 16.w,
+                          height: 16.h,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
                     ),
+                    SizedBox(width: 10.w),
+                    Text(
+                      'Respiratory Diseases',
+                      style: getTextTheme().bodyMedium,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(
+              //vertical: 20.h,
+              bottom: 20.h,
+              left: 10.w,
+              right: 10.w,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10.sp),
+                bottomRight: Radius.circular(10.sp),
+              ),
+              color: ConstColors.grey.withOpacity(0.3),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+                  child: Text(
+                    'Please choose one or more respiratory diseases you are currently having.',
+                    style: getTextTheme(
+                      color: ConstColors.darkGrey,
+                    ).bodyMedium,
                   ),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Respiratory Diseases',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                ),
+
+                // List of conditions
+                SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                  child: GetBuilder<PatientHistoryController>(
+                    id: 'conditions_list',
+                    builder: (_) => Column(
+                      children: [
+                        ...List.generate(
+                          controller.conditions.length,
+                          (index) => _buildConditionItem(controller, index),
+                        ),
+
+                        // Other condition text field (conditionally visible)
+                        Obx(() {
+                          return controller.showOtherTextField.value
+                              ? ConstTextField(
+                                  customText: 'Please specify',
+                                  hintStyle: GoogleFonts.content(
+                                    fontWeight: FontWeight.w400,
+                                    color: ConstColors.grey,
+                                    fontSize: 16.sp,
+                                  ),
+                                  textStyle: GoogleFonts.content(
+                                    fontWeight: FontWeight.w400,
+                                    color: ConstColors.darkGrey,
+                                    fontSize: 16.sp,
+                                  ),
+                                  controller:
+                                      controller.otherConditionController.value,
+                                  validator: controller.validateOther,
+                                  keyoardType: TextInputType.text,
+                                  inputFormatters: [],
+                                  onChanged: (value) {
+                                    controller.otherConditionController.value
+                                        .text = value;
+                                    // controller.formKey.currentState
+                                    //     ?.validate(); // Validate on change
+                                    controller.update(["login"]);
+                                  },
+                                  onSaved: (p0) {
+                                    controller.updateOther(p0 ?? '');
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                )
+                              : const SizedBox.shrink();
+                        }),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        // Instructions text
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'Please choose one or more respiratory diseases you are currently having.',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
+                ),
+              ],
             ),
           ),
-        ),
 
-        // List of conditions
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: GetBuilder<PatientHistoryController>(
-              id: 'conditions_list',
-              builder: (_) => Column(
-                children: [
-                  ...List.generate(
-                    controller.conditions.length,
-                    (index) => _buildConditionItem(controller, index),
+          ConstantButton(
+            height: 45.h,
+            horiPadding: 15.w,
+            vertiPadding: 40.h,
+            press: () {
+              controller.goToNextPage();
+            },
+            text: "Next",
+            borderRadius: 8.sp,
+            color: ConstColors.buttonColor,
+            bordercolor: ConstColors.buttonColor,
+            style: getTextTheme(
+              fontWeight: FontWeight.w500,
+            ).bodyMedium,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConditionItem(PatientHistoryController controller, int index) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0.h),
+      child: InkWell(
+        onTap: () => controller.toggleCondition(index),
+        child: Row(
+          children: [
+            Obx(() {
+              final condition = controller.conditions[index];
+              return Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: condition.isSelected.value
+                        ? const Color(0xFF4BA8A5)
+                        : Colors.grey[400]!,
+                    width: 2,
                   ),
-
-                  // Other condition text field (conditionally visible)
-                  Obx(() {
-                    return controller.showOtherTextField.value
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                left: 36.0, right: 16.0, top: 8.0),
-                            child: TextField(
-                              controller: controller.otherConditionController,
-                              decoration: InputDecoration(
-                                hintText: 'Please specify',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink();
-                  }),
-                ],
-              ),
+                ),
+                child: condition.isSelected.value
+                    ? Center(
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF4BA8A5),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      )
+                    : null,
+              );
+            }),
+            SizedBox(width: 10.w),
+            Text(
+              controller.conditions[index].name,
+              style: getTextTheme(
+                color: ConstColors.darkGrey,
+              ).bodyMedium,
             ),
-          ),
+          ],
         ),
-
-        // Next button
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: ElevatedButton(
-            onPressed: controller.goToNextPage,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4BA8A5),
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: const Text(
-              'Next',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -1063,7 +1136,8 @@ class HomePage extends StatelessWidget {
       case 3:
         return _buildLifestyleFactorsPage(controller, headerColor);
       default:
-        return _buildDefaultBlankPage(controller, pageIndex, headerColor);
+        return SizedBox();
+      //_buildDefaultBlankPage(controller, pageIndex, headerColor);
     }
   }
 
@@ -1074,34 +1148,138 @@ class HomePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Header section with blue background
+        // Container(
+        //   decoration: BoxDecoration(
+        //     color: headerColor,
+        //     borderRadius: const BorderRadius.only(
+        //       topLeft: Radius.circular(12),
+        //       topRight: Radius.circular(12),
+        //     ),
+        //   ),
+        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        //   child: const Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       // Left side - Icon and text
+        //       Row(
+        //         children: [
+        //           Icon(
+        //             Icons.medication,
+        //             color: Colors.white,
+        //             size: 24,
+        //           ),
+        //           SizedBox(width: 12),
+        //           Text(
+        //             'Medication Information',
+        //             style: TextStyle(
+        //               color: Colors.white,
+        //               fontSize: 16,
+        //               fontWeight: FontWeight.w500,
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // // Instructions text
+        // Padding(
+        //   padding: const EdgeInsets.all(16.0),
+        //   child: Text(
+        //     'Please enter information about your current medications.',
+        //     style: TextStyle(
+        //       color: Colors.grey[600],
+        //       fontSize: 14,
+        //     ),
+        //   ),
+        // ),
+        // // Medication form content
+        // Expanded(
+        //   child: SingleChildScrollView(
+        //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        //     child: Column(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         _buildFormField('Medication Name', 'Enter medication name'),
+        //         const SizedBox(height: 16),
+        //         _buildFormField('Dosage', 'Enter dosage (e.g., 500mg)'),
+        //         const SizedBox(height: 16),
+        //         _buildFormField('Frequency', 'How often? (e.g., twice daily)'),
+        //         const SizedBox(height: 16),
+        //         Text(
+        //           'Duration of Treatment',
+        //           style: TextStyle(
+        //             fontSize: 16,
+        //             color: Colors.grey[700],
+        //             fontWeight: FontWeight.w500,
+        //           ),
+        //         ),
+        //         const SizedBox(height: 8),
+        //         // Duration options
+        //         Wrap(
+        //           spacing: 8.0,
+        //           children: [
+        //             _buildChip('Less than a week', headerColor),
+        //             _buildChip('1-4 weeks', headerColor),
+        //             _buildChip('1-6 months', headerColor),
+        //             _buildChip('More than 6 months', headerColor),
+        //           ],
+        //         ),
+        //         const SizedBox(height: 24),
+        //         Text(
+        //           'Side Effects',
+        //           style: TextStyle(
+        //             fontSize: 16,
+        //             color: Colors.grey[700],
+        //             fontWeight: FontWeight.w500,
+        //           ),
+        //         ),
+        //         const SizedBox(height: 8),
+        //         _buildFormField(
+        //             'Side Effects', 'List any side effects experienced',
+        //             maxLines: 3),
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        // // Navigation buttons
+        // _buildNavigationButtons(controller, false, headerColor),
         Container(
           decoration: BoxDecoration(
-            color: headerColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
+            color: ConstColors.blue,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12.sp),
+              topRight: Radius.circular(12.sp),
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: const Row(
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Left side - Icon and text
               Row(
                 children: [
-                  Icon(
-                    Icons.medication,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  SizedBox(width: 12),
-                  Text(
-                    'Medication Information',
-                    style: TextStyle(
+                  Container(
+                    width: 24.w,
+                    height: 24.h,
+                    decoration: const BoxDecoration(
                       color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      shape: BoxShape.circle,
                     ),
+                    child: Center(
+                      child: Container(
+                        width: 16.w,
+                        height: 16.h,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    'Medication',
+                    style: getTextTheme().bodyMedium,
                   ),
                 ],
               ),
@@ -1109,73 +1287,83 @@ class HomePage extends StatelessWidget {
           ),
         ),
 
-        // Instructions text
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'Please enter information about your current medications.',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
+        Container(
+          // padding: EdgeInsets.symmetric(
+          //   //vertical: 20.h,
+          //   horizontal: 20.h,
+          //   vertical: 10.w,
+          // ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10.sp),
+              bottomRight: Radius.circular(10.sp),
             ),
+            color: ConstColors.grey.withOpacity(0.3),
           ),
-        ),
-
-        // Medication form content
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildFormField('Medication Name', 'Enter medication name'),
-                const SizedBox(height: 16),
-                _buildFormField('Dosage', 'Enter dosage (e.g., 500mg)'),
-                const SizedBox(height: 16),
-                _buildFormField('Frequency', 'How often? (e.g., twice daily)'),
-                const SizedBox(height: 16),
-
-                Text(
-                  'Duration of Treatment',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
+          child: Column(
+            children: [
+              // Light gray container for all medication sections
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF2F2F2),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
                   ),
                 ),
-                const SizedBox(height: 8),
-
-                // Duration options
-                Wrap(
-                  spacing: 8.0,
+                child: Column(
                   children: [
-                    _buildChip('Less than a week', headerColor),
-                    _buildChip('1-4 weeks', headerColor),
-                    _buildChip('1-6 months', headerColor),
-                    _buildChip('More than 6 months', headerColor),
+                    // Maintenance Medication section
+                    MedicationSection(
+                      title: 'Maintenance Medication',
+                      placeholder: 'Drug name 1',
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Rescue Medication section
+                    MedicationSection(
+                      title: 'Rescue Medication',
+                      placeholder: 'Drug name 1',
+                    ),
                   ],
                 ),
-
-                const SizedBox(height: 24),
-                Text(
-                  'Side Effects',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                _buildFormField(
-                    'Side Effects', 'List any side effects experienced',
-                    maxLines: 3),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
 
-        // Navigation buttons
-        _buildNavigationButtons(controller, false, headerColor),
+        ConstantButton(
+          height: 45.h,
+          horiPadding: 15.w,
+          vertiPadding: 40.h,
+          press: () {
+            controller.goToNextPage();
+          },
+          text: "Next",
+          borderRadius: 8.sp,
+          color: ConstColors.buttonColor,
+          bordercolor: ConstColors.buttonColor,
+          style: getTextTheme(
+            fontWeight: FontWeight.w500,
+          ).bodyMedium,
+        ),
+        ConstantButton(
+          height: 45.h,
+          horiPadding: 15.w,
+          press: () {
+            controller.goToPreviousPage();
+          },
+          text: "Back",
+          borderRadius: 8.sp,
+          color: ConstColors.buttonColor,
+          bordercolor: ConstColors.buttonColor,
+          style: getTextTheme(
+            fontWeight: FontWeight.w500,
+          ).bodyMedium,
+        )
       ],
     );
   }
@@ -1186,7 +1374,6 @@ class HomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Header section with purple background
         Container(
           decoration: BoxDecoration(
             color: headerColor,
@@ -1203,13 +1390,13 @@ class HomePage extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.trending_up,
+                    Icons.favorite,
                     color: Colors.white,
                     size: 24,
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Symptom Severity',
+                    'dfgsdgsdg',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -1221,53 +1408,6 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-
-        // Instructions text
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'Please rate the severity of your symptoms on a scale of 1-10.',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
-            ),
-          ),
-        ),
-
-        // Symptom severity form
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildSeveritySlider('Shortness of Breath', headerColor),
-                const SizedBox(height: 16),
-                _buildSeveritySlider('Coughing', headerColor),
-                const SizedBox(height: 16),
-                _buildSeveritySlider('Chest Pain', headerColor),
-                const SizedBox(height: 16),
-                _buildSeveritySlider('Wheezing', headerColor),
-                const SizedBox(height: 16),
-                _buildSeveritySlider('Fatigue', headerColor),
-                const SizedBox(height: 24),
-                Text(
-                  'Additional Symptoms',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                _buildFormField('Other Symptoms', 'Describe any other symptoms',
-                    maxLines: 3),
-              ],
-            ),
-          ),
-        ),
-
-        // Navigation buttons
         _buildNavigationButtons(controller, false, headerColor),
       ],
     );
@@ -1316,97 +1456,6 @@ class HomePage extends StatelessWidget {
         ),
 
         // Instructions text
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'Please provide information about your lifestyle factors.',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
-            ),
-          ),
-        ),
-
-        // Lifestyle factors form
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Smoking Status',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8.0,
-                  children: [
-                    _buildChip('Never smoked', headerColor),
-                    _buildChip('Former smoker', headerColor),
-                    _buildChip('Current smoker', headerColor),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Exercise Frequency',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8.0,
-                  children: [
-                    _buildChip('None', headerColor),
-                    _buildChip('1-2 times/week', headerColor),
-                    _buildChip('3-5 times/week', headerColor),
-                    _buildChip('Daily', headerColor),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Diet',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8.0,
-                  children: [
-                    _buildChip('Vegetarian', headerColor),
-                    _buildChip('Vegan', headerColor),
-                    _buildChip('Mediterranean', headerColor),
-                    _buildChip('Standard', headerColor),
-                    _buildChip('Other', headerColor),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Allergens or Triggers',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                _buildFormField('Allergens/Triggers',
-                    'List any known allergens or triggers',
-                    maxLines: 3),
-              ],
-            ),
-          ),
-        ),
 
         // Navigation buttons
         _buildNavigationButtons(controller, false, headerColor),
@@ -1526,7 +1575,7 @@ class HomePage extends StatelessWidget {
         // Header section
         Container(
           decoration: BoxDecoration(
-            color: headerColor,
+            color: Colors.black,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),
@@ -1594,95 +1643,6 @@ class HomePage extends StatelessWidget {
 
         // Navigation buttons
         _buildNavigationButtons(controller, false, headerColor),
-      ],
-    );
-  }
-
-  // Helper widgets
-  Widget _buildFormField(String label, String hint, {int maxLines = 1}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[700],
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            hintText: hint,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(color: Colors.grey[300]!),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildChip(String label, Color color) {
-    return FilterChip(
-      label: Text(label),
-      backgroundColor: Colors.grey[200],
-      selectedColor: color.withOpacity(0.2),
-      checkmarkColor: color,
-      onSelected: (bool selected) {
-        // In a real app, you'd handle selection
-        print('$label selected: $selected');
-      },
-      labelStyle: TextStyle(color: Colors.grey[800]),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-    );
-  }
-
-  Widget _buildSeveritySlider(String symptomName, Color accentColor) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          symptomName,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[700],
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Row(
-          children: [
-            Text('0', style: TextStyle(color: Colors.grey[600])),
-            Expanded(
-              child: SliderTheme(
-                data: SliderThemeData(
-                  activeTrackColor: accentColor,
-                  thumbColor: accentColor,
-                  inactiveTrackColor: Colors.grey[300],
-                ),
-                child: Slider(
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  value:
-                      5, // Default value, in real app this would be from controller
-                  onChanged: (value) {
-                    // In a real app, you'd handle value changes
-                    print('$symptomName severity: $value');
-                  },
-                ),
-              ),
-            ),
-            Text('10', style: TextStyle(color: Colors.grey[600])),
-          ],
-        ),
       ],
     );
   }
@@ -1773,7 +1733,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             child: Text(
-              isSummary ? 'Submit' : 'Next',
+              isSummary ? 'Done' : 'Next',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -1808,52 +1768,75 @@ class HomePage extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildConditionItem(PatientHistoryController controller, int index) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: InkWell(
-        onTap: () => controller.toggleCondition(index),
-        child: Row(
-          children: [
-            Obx(() {
-              final condition = controller.conditions[index];
-              return Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: condition.isSelected.value
-                        ? const Color(0xFF4BA8A5)
-                        : Colors.grey[400]!,
-                    width: 2,
+class MedicationSection extends StatelessWidget {
+  final String title;
+  final String placeholder;
+
+  const MedicationSection({
+    Key? key,
+    required this.title,
+    required this.placeholder,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
+      decoration: BoxDecoration(
+        color: ConstColors.grey,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: getTextTheme(
+                  color: ConstColors.darkGrey,
+                ).bodyMedium,
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  width: 24.w,
+                  height: 24.h,
+                  decoration: BoxDecoration(
+                    color: ConstColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.add,
+                    size: 16.sp,
+                    color: ConstColors.white,
                   ),
                 ),
-                child: condition.isSelected.value
-                    ? Center(
-                        child: Container(
-                          width: 12,
-                          height: 12,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF4BA8A5),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      )
-                    : null,
-              );
-            }),
-            const SizedBox(width: 12),
-            Text(
-              controller.conditions[index].name,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[700],
+              ),
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10.h),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              color: ConstColors.white,
+              // border: Border.all(color: Colors.black12),
+              borderRadius: BorderRadius.circular(8.sp),
+            ),
+            child: Text(
+              placeholder,
+              style: const TextStyle(
+                color: Colors.black38,
+                fontSize: 14,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

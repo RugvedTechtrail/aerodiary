@@ -22,6 +22,7 @@ class ConstYearPicker extends StatefulWidget {
   final TextStyle? textStyle;
   final TextStyle? hintStyle;
   final Color? iconColor;
+  final AutovalidateMode? autovalidateMode;
 
   const ConstYearPicker({
     super.key,
@@ -36,6 +37,7 @@ class ConstYearPicker extends StatefulWidget {
     this.textStyle,
     this.hintStyle,
     this.iconColor,
+    this.autovalidateMode,
   });
 
   @override
@@ -61,7 +63,6 @@ class ConstYearPickerState extends State<ConstYearPicker> {
       lastDate: lastDate,
       initialDatePickerMode: DatePickerMode.day,
       builder: (BuildContext context, Widget? child) {
-        // log('in date picker of fuel expense');
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: ConstColors.white,
@@ -74,20 +75,24 @@ class ConstYearPickerState extends State<ConstYearPicker> {
     );
 
     if (picked != null) {
+      // Update the text controller
+      final formattedDate = DateFormat("yyyy-MM-dd").format(picked);
       setState(() {
-        widget.controller.text = DateFormat("yyyy-MM-dd").format(picked);
-
-        log("widget.controller.text ${widget.controller.text}");
-        //log("widget.controller1.text ${widget.controller1?.text}");
+        widget.controller.text = formattedDate;
       });
-      int? empPerId = box.read("empPerId");
 
-      // log("date1 is  $date1");
-      // log("picked date  is  $picked");
-      // log("widget.isSecond is  ${widget.isSecond}");
-      // log('Picked Month: ${picked.month}, Year: ${picked.year}');
-      // log("controller value is ${widget.controller.text}");
-      // log("controller1 value is ${widget.controller1?.text}");
+      // Call onChanged to notify parent
+      widget.onChanged(formattedDate);
+
+      // If onSaved is provided, call it as well to ensure form state is updated
+      if (widget.onSaved != null) {
+        widget.onSaved!(formattedDate);
+      }
+
+      // Force validation to run immediately to clear error
+      if (Form.of(context) != null) {
+        Form.of(context)!.validate();
+      }
     }
   }
 
@@ -168,10 +173,11 @@ class ConstYearPickerState extends State<ConstYearPicker> {
                   ),
                 ),
               ),
+              autovalidateMode: widget.autovalidateMode,
               style: widget.textStyle ?? getTextTheme().displaySmall,
               validator: widget.validator,
               onSaved: widget.onSaved,
-              onChanged: widget.onChanged,
+              // onChanged: widget.onChanged,
               enabled: false,
               onTap: () => _startMonthYear(context),
             ),
