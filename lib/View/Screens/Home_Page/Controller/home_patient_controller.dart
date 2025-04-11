@@ -143,7 +143,7 @@ class PatientHistoryController extends GetxController {
     ConditionItem(name: 'Condition 5', selected: false),
     ConditionItem(name: 'Other', selected: false),
   ].obs;
-
+  final medicationList = <MedicationItem>[].obs;
   // Controller for the "Other" text field
   Rx<TextEditingController> otherConditionController =
       TextEditingController().obs;
@@ -166,6 +166,7 @@ class PatientHistoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    loadMedications();
     pageController = PageController(initialPage: 0);
   }
 
@@ -504,4 +505,86 @@ class PatientHistoryController extends GetxController {
         return 'Unknown';
     }
   }
+
+  void loadMedications() {
+    medicationList.value = [
+      MedicationItem(
+        name: 'Innovair ® 100 μg + 6 μg',
+        subtitle: 'inhalation aerosol',
+        icon: Icons.medication_liquid_outlined,
+      ),
+      MedicationItem(
+        name: 'Innovair ® 200 μg + 6 μg',
+        subtitle: 'inhalation aerosol',
+        icon: Icons.medication_liquid_outlined,
+      ),
+      MedicationItem(
+        name: 'Innovair ® NEXThaler 100 μg + 6 μg',
+        subtitle: 'dry powder inhaler',
+        icon: Icons.circle_outlined,
+      ),
+      MedicationItem(
+        name: 'AB-Flo 100 100 mg',
+        subtitle: 'tablets',
+        icon: Icons.grid_4x4_outlined,
+      ),
+      MedicationItem(
+        name: 'Advair 100 μg',
+        subtitle: 'dry powder inhaler',
+        icon: Icons.circle_outlined,
+      ),
+      MedicationItem(
+        name: 'Advair 250 μg',
+        subtitle: 'dry powder inhaler',
+        icon: Icons.circle_outlined,
+      ),
+      MedicationItem(
+        name: 'Advair 500 μg',
+        subtitle: 'dry powder inhaler',
+        icon: Icons.circle_outlined,
+      ),
+      MedicationItem(
+        name: 'Advair 115 μg',
+        subtitle: 'inhalation aerosol',
+        icon: Icons.medication_liquid_outlined,
+      ),
+      MedicationItem(
+        name: 'Aerius 5 mg',
+        subtitle: 'tablets',
+        icon: Icons.grid_4x4_outlined,
+      ),
+      MedicationItem(
+        name: 'Aerius (syrop) 0,5 mg/ml',
+        subtitle: 'solution',
+        icon: Icons.local_drink_outlined,
+      ),
+      MedicationItem(
+        name: 'Aerocort Rotacaps Forte 200 mcg',
+        subtitle: 'dry powder capsule inhaler',
+        icon: Icons.circle_outlined,
+      ),
+      MedicationItem(
+        name: 'Aerolin® 100 μg',
+        subtitle: 'inhalation aerosol',
+        icon: Icons.medication_liquid_outlined,
+      ),
+      MedicationItem(
+        name: 'Ahist 5 mg',
+        subtitle: 'tablets',
+        icon: Icons.grid_4x4_outlined,
+      ),
+    ];
+  }
+}
+
+class MedicationItem {
+  final String name;
+  final String subtitle;
+  final IconData icon;
+
+  MedicationItem({
+    required this.name,
+    required this.subtitle,
+    required this.icon,
+  });
 }

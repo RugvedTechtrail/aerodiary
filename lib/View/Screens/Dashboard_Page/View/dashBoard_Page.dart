@@ -52,67 +52,69 @@ class _DashboardPageState extends State<DashboardPage> {
           exitDialog();
         }
       },
-      child: Scaffold(
-        body: PageView(
-          onPageChanged: onPageChanged,
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: widgetOptions,
-        ),
-        bottomNavigationBar: Container(
-          child: BottomNavigationBar(
-            backgroundColor: ConstColors.primary,
-            elevation: 10.sp,
-            type: BottomNavigationBarType.fixed,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            unselectedItemColor: ConstColors.buttonColor,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home_outlined,
-                  size: 26.sp,
-                  color: ConstColors.buttonColor,
+      child: SafeArea(
+        child: Scaffold(
+          body: PageView(
+            onPageChanged: onPageChanged,
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: widgetOptions,
+          ),
+          bottomNavigationBar: Container(
+            child: BottomNavigationBar(
+              backgroundColor: ConstColors.primary,
+              elevation: 10.sp,
+              type: BottomNavigationBarType.fixed,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              unselectedItemColor: ConstColors.buttonColor,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.home_outlined,
+                    size: 26.sp,
+                    color: ConstColors.buttonColor,
+                  ),
+                  activeIcon: Icon(
+                    Icons.home_sharp,
+                    size: 26.sp,
+                    color: ConstColors.buttonColor,
+                  ),
+                  label: "Home",
                 ),
-                activeIcon: Icon(
-                  Icons.home_sharp,
-                  size: 26.sp,
-                  color: ConstColors.buttonColor,
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.shield_outlined,
+                    size: 26.sp,
+                    color: ConstColors.buttonColor,
+                  ),
+                  activeIcon: Icon(
+                    Icons.shield_sharp,
+                    size: 26.sp,
+                    color: ConstColors.buttonColor,
+                  ),
+                  label: "Drugs",
                 ),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.shield_outlined,
-                  size: 26.sp,
-                  color: ConstColors.buttonColor,
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.pie_chart_outline,
+                    size: 26.sp,
+                    color: ConstColors.buttonColor,
+                  ),
+                  activeIcon: Icon(
+                    Icons.pie_chart_sharp,
+                    size: 26.sp,
+                    color: ConstColors.buttonColor,
+                  ),
+                  label: "Trends",
                 ),
-                activeIcon: Icon(
-                  Icons.shield_sharp,
-                  size: 26.sp,
-                  color: ConstColors.buttonColor,
-                ),
-                label: "Drugs",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.pie_chart_outline,
-                  size: 26.sp,
-                  color: ConstColors.buttonColor,
-                ),
-                activeIcon: Icon(
-                  Icons.pie_chart_sharp,
-                  size: 26.sp,
-                  color: ConstColors.buttonColor,
-                ),
-                label: "Trends",
-              ),
-            ],
-            currentIndex: selectedIndex ?? 0,
-            selectedItemColor: ConstColors.buttonColor,
-            onTap: onTabTapped,
-            selectedFontSize: 15.sp,
-            unselectedFontSize: 12.sp,
+              ],
+              currentIndex: selectedIndex ?? 0,
+              selectedItemColor: ConstColors.buttonColor,
+              onTap: onTabTapped,
+              selectedFontSize: 15.sp,
+              unselectedFontSize: 12.sp,
+            ),
           ),
         ),
       ),

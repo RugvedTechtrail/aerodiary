@@ -6,57 +6,57 @@ import 'const_colors.dart';
 TextTheme getTextTheme(
     {Color? color, double? fontSize, FontWeight? fontWeight}) {
   return TextTheme(
-    headlineLarge: GoogleFonts.content(
+    headlineLarge: GoogleFonts.poppins(
       fontWeight: fontWeight ?? FontWeight.w600,
       color: color ?? ConstColors.buttonColor,
       fontSize: fontSize ?? 22.sp,
     ),
-    headlineMedium: GoogleFonts.content(
+    headlineMedium: GoogleFonts.poppins(
       fontWeight: FontWeight.w500,
       color: color ?? ConstColors.buttonColor,
       fontSize: fontSize ?? 18.sp,
     ),
-    headlineSmall: GoogleFonts.content(
+    headlineSmall: GoogleFonts.poppins(
       fontWeight: FontWeight.w400,
       color: color ?? ConstColors.buttonColor,
       fontSize: fontSize ?? 16.sp,
     ),
-    bodyLarge: GoogleFonts.content(
+    bodyLarge: GoogleFonts.poppins(
       fontWeight: FontWeight.normal,
       color: color ?? ConstColors.white,
       fontSize: 18.sp,
     ),
-    bodyMedium: GoogleFonts.content(
+    bodyMedium: GoogleFonts.poppins(
       fontWeight: FontWeight.normal,
       color: color ?? ConstColors.white,
       fontSize: 16.sp,
     ),
-    bodySmall: GoogleFonts.content(
+    bodySmall: GoogleFonts.poppins(
       fontWeight: FontWeight.w400,
       color: color ?? ConstColors.white,
       fontSize: 14.sp,
     ),
-    titleLarge: GoogleFonts.content(
+    titleLarge: GoogleFonts.poppins(
       fontWeight: FontWeight.w500,
       color: color ?? ConstColors.white,
       fontSize: 24.sp,
     ),
-    titleMedium: GoogleFonts.content(
+    titleMedium: GoogleFonts.poppins(
       fontWeight: FontWeight.w500,
       color: color ?? ConstColors.white,
       fontSize: 20.sp,
     ),
-    titleSmall: GoogleFonts.content(
+    titleSmall: GoogleFonts.poppins(
       fontWeight: FontWeight.w500,
       color: color ?? ConstColors.white,
       fontSize: 14.sp,
     ),
-    displayLarge: GoogleFonts.content(
+    displayLarge: GoogleFonts.poppins(
       fontWeight: FontWeight.w500,
       color: color ?? ConstColors.black,
       fontSize: 16.sp,
     ),
-    displayMedium: GoogleFonts.content(
+    displayMedium: GoogleFonts.poppins(
         fontWeight: FontWeight.w500,
         color: color ?? ConstColors.black,
         fontSize: 14.sp),
@@ -65,17 +65,17 @@ TextTheme getTextTheme(
       fontSize: 12.sp,
       color: color ?? ConstColors.black,
     ),
-    labelSmall: GoogleFonts.content(
+    labelSmall: GoogleFonts.poppins(
       fontWeight: FontWeight.w500,
       fontSize: 10.sp,
       color: ConstColors.white,
     ),
-    labelMedium: GoogleFonts.content(
+    labelMedium: GoogleFonts.poppins(
       fontWeight: FontWeight.w500,
       fontSize: 12.sp,
       color: color ?? ConstColors.white,
     ),
-    labelLarge: GoogleFonts.content(
+    labelLarge: GoogleFonts.poppins(
       fontWeight: FontWeight.bold,
       fontSize: 14.sp,
       color: color ?? ConstColors.white,

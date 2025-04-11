@@ -448,13 +448,12 @@ class PatientScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.firstNameController.value.text =
                                       value;
-                                  // controller.formKey.currentState
-                                  //     ?.validate(); // Validate on change
-                                  controller.update(["login"]);
+                                  controller.markFieldAsTouched('firstName');
                                 },
                                 onSaved: (p0) {
                                   controller.updateFName(p0 ?? '');
                                 },
+                                // Change this to disabled
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                               ),
@@ -482,9 +481,7 @@ class PatientScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.lastNameControllerNew.value.text =
                                       value;
-                                  controller.validateSpecificField('lastName');
-
-                                  controller.update(["login"]);
+                                  controller.markFieldAsTouched('lastName');
                                 },
                                 onSaved: (p0) {
                                   controller.updateLName(p0 ?? '');
@@ -513,18 +510,15 @@ class PatientScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.dateOfBirthController.value.text =
                                       value;
-                                  controller.validateSpecificField('dob');
-                                  controller.update(["login"]);
+                                  controller.markFieldAsTouched('dob');
                                 },
                                 onSaved: (p0) {
-                                  controller.validateSpecificField('dob');
                                   controller.updateDob(p0 ?? '');
                                 },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
+                                // Change this to disabled
+                                autovalidateMode: AutovalidateMode.disabled,
                                 mandatoryTitle: "Date of Birth",
                               ),
-
                               Container(
                                 margin: EdgeInsets.symmetric(vertical: 5.h),
                                 child: DropdownButtonFormField<String>(
@@ -604,6 +598,7 @@ class PatientScreen extends StatelessWidget {
                                   onChanged: (value) {
                                     if (value != null) {
                                       controller.gender.value = value;
+                                      controller.markFieldAsTouched('gender');
                                       // controller.formKey.currentState
                                       //     ?.validate(); // Validate on change
                                       controller.update(["login"]);
@@ -640,6 +635,7 @@ class PatientScreen extends StatelessWidget {
                                   controller.emailController.value.text = value;
                                   // controller.formKey.currentState
                                   //     ?.validate(); // Validate on change
+                                  controller.markFieldAsTouched('email');
                                   controller.update(["login"]);
                                 },
                                 onSaved: (p0) {
@@ -673,6 +669,7 @@ class PatientScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.mobileNumberController.value.text =
                                       value;
+                                  controller.markFieldAsTouched('mobile');
                                   // controller.formKey.currentState
                                   //     ?.validate(); // Validate on change
                                   controller.update(["login"]);
@@ -706,6 +703,7 @@ class PatientScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.otpControllerNew.value.text =
                                       value;
+                                  controller.markFieldAsTouched('otp');
                                   // controller.formKey.currentState
                                   //     ?.validate(); // Validate on change
                                   controller.update(["login"]);
