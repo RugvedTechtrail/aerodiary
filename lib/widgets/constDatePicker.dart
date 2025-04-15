@@ -47,6 +47,9 @@ class ConstYearPicker extends StatefulWidget {
 class ConstYearPickerState extends State<ConstYearPicker> {
   GetStorage box = GetStorage();
   Future<void> _startMonthYear(BuildContext context) async {
+    // Explicitly dismiss the keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
+
     final DateTime now = DateTime.now();
     DateTime? date1 = widget.controller1?.value != null
         ? DateTime.parse(widget.controller1!.text)
@@ -113,6 +116,8 @@ class ConstYearPickerState extends State<ConstYearPicker> {
         children: [
           GestureDetector(
             onTap: () {
+              // Dismiss keyboard
+              FocusManager.instance.primaryFocus?.unfocus();
               _startMonthYear(context);
             },
             child: TextFormField(
@@ -126,6 +131,8 @@ class ConstYearPickerState extends State<ConstYearPicker> {
                     size: 25.sp,
                   ),
                   onPressed: () {
+                    // Dismiss keyboard
+                    FocusManager.instance.primaryFocus?.unfocus();
                     _startMonthYear(context);
                   },
                 ),
@@ -177,9 +184,12 @@ class ConstYearPickerState extends State<ConstYearPicker> {
               style: widget.textStyle ?? getTextTheme().displaySmall,
               validator: widget.validator,
               onSaved: widget.onSaved,
-              // onChanged: widget.onChanged,
               enabled: false,
-              onTap: () => _startMonthYear(context),
+              onTap: () {
+                // Dismiss keyboard
+                FocusManager.instance.primaryFocus?.unfocus();
+                _startMonthYear(context);
+              },
             ),
           ),
         ],

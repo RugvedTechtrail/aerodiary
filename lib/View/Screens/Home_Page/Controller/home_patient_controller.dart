@@ -5,119 +5,12 @@ import 'package:aerodiary/constants/custom_textstyle.dart';
 import 'package:aerodiary/widgets/constDatePicker.dart';
 import 'package:aerodiary/widgets/constTextField.dart';
 import 'package:aerodiary/widgets/const_button.dart';
+import 'package:aerodiary/widgets/date_picker_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
-// class ConditionItem {
-//   final String name;
-//   RxBool isSelected;
-
-//   ConditionItem({required this.name, required bool selected})
-//       : isSelected = selected.obs;
-// }
-
-// class PatientHistoryController extends GetxController {
-//   // List of conditions with their selection status
-//   final RxList<ConditionItem> conditions = <ConditionItem>[
-//     ConditionItem(name: 'Condition 1', selected: false),
-//     ConditionItem(name: 'Condition 2', selected: false),
-//     ConditionItem(name: 'Condition 3', selected: false),
-//     ConditionItem(name: 'Condition 4', selected: false),
-//     ConditionItem(name: 'Condition 5', selected: false),
-//     ConditionItem(name: 'Other', selected: false),
-//   ].obs;
-
-//   // Controller for the "Other" text field
-//   final TextEditingController otherConditionController =
-//       TextEditingController();
-
-//   // Flag to show/hide the "Other" text field
-//   final RxBool showOtherTextField = false.obs;
-
-//   // Current page index to control which view to show
-//   final RxInt currentPageIndex = 0.obs;
-
-//   // Page controller for slide animation
-//   late final PageController pageController;
-
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     pageController = PageController(initialPage: 0);
-//   }
-
-//   @override
-//   void onClose() {
-//     otherConditionController.dispose();
-//     pageController.dispose();
-//     super.onClose();
-//   }
-
-//   void toggleCondition(int index) {
-//     conditions[index].isSelected.toggle();
-
-//     // If "Other" is selected or unselected, update the text field visibility
-//     if (conditions[index].name == 'Other') {
-//       showOtherTextField.value = conditions[index].isSelected.value;
-//       if (!showOtherTextField.value) {
-//         otherConditionController.clear();
-//       }
-//     }
-//     log('Selected condition is ${conditions[index].name}');
-//     update(['conditions_list']);
-//   }
-
-//   List<String> getSelectedConditions() {
-//     final selectedConditions =
-//         conditions.where((c) => c.isSelected.value).map((c) => c.name).toList();
-
-//     if (showOtherTextField.value && otherConditionController.text.isNotEmpty) {
-//       selectedConditions.add('Other: ${otherConditionController.text}');
-//     }
-//     log('selected condion is $selectedConditions');
-//     return selectedConditions;
-//   }
-
-//   void goToNextPage() {
-//     // Process selected conditions if needed
-//     List<String> selectedConditions = getSelectedConditions();
-//     log('Selected conditions: $selectedConditions');
-
-//     // Increase page index and animate to next page
-//     currentPageIndex.value++;
-//     pageController.animateToPage(
-//       currentPageIndex.value,
-//       duration: const Duration(milliseconds: 300),
-//       curve: Curves.easeInOut,
-//     );
-//     log('Navigated  to page ${currentPageIndex.value}');
-//     update(['page_container']);
-//   }
-
-//   void goToPreviousPage() {
-//     // Check if we can go back (not on the first page)
-//     if (currentPageIndex.value > 0) {
-//       // Decrease page index
-//       currentPageIndex.value--;
-
-//       // Animate to previous page
-//       pageController.animateToPage(
-//         currentPageIndex.value,
-//         duration: const Duration(milliseconds: 300),
-//         curve: Curves.easeInOut,
-//       );
-
-//       log('Navigated back to page ${currentPageIndex.value}');
-//       update(['page_container']);
-//     } else {
-//       // Already on the first page, could handle differently if needed
-//       log('Already on the first page');
-//     }
-//   }
-// }
 
 class ConditionItem {
   final String name;
@@ -144,6 +37,13 @@ class PatientHistoryController extends GetxController {
     ConditionItem(name: 'Other', selected: false),
   ].obs;
   final medicationList = <MedicationItem>[].obs;
+
+  // Selected medications lists
+  final RxList<MedicationItem> selectedMaintenanceMedications =
+      <MedicationItem>[].obs;
+  final RxList<MedicationItem> selectedRescueMedications =
+      <MedicationItem>[].obs;
+
   // Controller for the "Other" text field
   Rx<TextEditingController> otherConditionController =
       TextEditingController().obs;
@@ -190,7 +90,24 @@ class PatientHistoryController extends GetxController {
   }
 
   void updateOther(String value) {
+    String previousValue = otherConditionController.value.text;
     otherConditionController.value.text = value;
+
+    // If this is the first time text is being entered (was empty, now has text),
+    // automatically show the date picker
+    if (previousValue.isEmpty && value.isNotEmpty) {
+      // Find the index of the "Other" condition
+      int otherIndex =
+          conditions.indexWhere((condition) => condition.name == 'Other');
+      if (otherIndex != -1 && conditions[otherIndex].isSelected.value) {
+        // Use a short delay to allow UI to update first
+        Future.delayed(Duration(milliseconds: 100), () {
+          _showDatePickerDialog(otherIndex);
+          print('Auto-showing date picker for Other condition: $value');
+        });
+      }
+    }
+
     update(["conditions_list"]);
   }
 
@@ -199,6 +116,9 @@ class PatientHistoryController extends GetxController {
     // Toggle selection
     condition.isSelected.toggle();
 
+    print(
+        'Toggle condition: ${condition.name}, selected: ${condition.isSelected.value}');
+
     // If the condition is unselected, also reset the date and confirmation
     if (!condition.isSelected.value) {
       condition.conditionFromDate.value = null;
@@ -206,17 +126,30 @@ class PatientHistoryController extends GetxController {
       condition.dateConfirmed.value = false;
     }
 
-    // If the condition is selected and it's not "Other", show date picker dialog
-    if (condition.isSelected.value && condition.name != 'Other') {
-      _showDatePickerDialog(index);
-    }
-
     // If "Other" is selected or unselected, update the text field visibility
     if (condition.name == 'Other') {
       showOtherTextField.value = condition.isSelected.value;
       if (!showOtherTextField.value) {
         otherConditionController.value.clear();
+      } else {
+        // Check if there's text already and show dialog or focus text field
+        if (otherConditionController.value.text.isNotEmpty) {
+          print(
+              'Other selected with existing text: ${otherConditionController.value.text}');
+          // Show date picker if text is already entered
+          Future.delayed(Duration(milliseconds: 100), () {
+            _showDatePickerDialog(index);
+          });
+        } else {
+          print('Other selected, waiting for text input');
+          // We'll focus on text field and wait for input
+          // The showOtherDatePicker() will be called from updateOther()
+        }
       }
+    }
+    // For all other conditions, show date picker dialog when selected
+    else if (condition.isSelected.value) {
+      _showDatePickerDialog(index);
     }
 
     log('Selected condition is ${condition.name}');
@@ -224,6 +157,9 @@ class PatientHistoryController extends GetxController {
   }
 
   void _showDatePickerDialog(int index) {
+    // Unfocus any active text fields to dismiss the keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
+
     final condition = conditions[index];
     final formKey = GlobalKey<FormState>();
 
@@ -231,168 +167,78 @@ class PatientHistoryController extends GetxController {
     final originalDate = condition.conditionFromDate.value;
     final originalConfirmed = condition.dateConfirmed.value;
 
+    // Handle date change
+    void onDateChanged(String value) {
+      // Unfocus any active text fields to dismiss the keyboard
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      // Parse the date from the format returned by ConstYearPicker (yyyy-MM-dd)
+      condition.conditionFromDate.value = DateTime.parse(value);
+      // Format it according to your desired format (dd/MM/yyyy)
+      condition.dateController.value.text =
+          dateFormat.format(condition.conditionFromDate.value!);
+
+      print(
+          'Date selected for ${condition.name}: ${condition.dateController.value.text}');
+    }
+
+    // Handle done button press
+    void onDone() {
+      if (formKey.currentState?.validate() ?? false) {
+        if (condition.conditionFromDate.value != null) {
+          // Mark date as confirmed only when Done is clicked and date is selected
+          condition.dateConfirmed.value = true;
+          Get.back();
+          update(['conditions_list']);
+          print(
+              'Date confirmed for ${condition.name}: ${condition.dateController.value.text}');
+        } else {
+          // Show error or fallback behavior
+          Get.snackbar(
+            'Error',
+            'Please select a date first',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      }
+    }
+
+    // Handle cancel button press
+    void onCancel() {
+      // If canceled and no previous date was confirmed, unselect the condition
+      if (!originalConfirmed) {
+        condition.isSelected.value = false;
+      } else {
+        // Restore original values if there was a previously confirmed date
+        condition.conditionFromDate.value = originalDate;
+        condition.dateConfirmed.value = originalConfirmed;
+      }
+      Get.back();
+      update(['conditions_list']);
+    }
+
+    // Customize the title and message for the "Other" condition
+    String title = 'Selected : ${condition.name}';
+    String message = 'Since when are you having ${condition.name}?';
+
+    if (condition.name == 'Other' &&
+        otherConditionController.value.text.isNotEmpty) {
+      title = 'Selected : Other - ${otherConditionController.value.text}';
+      message =
+          'Since when are you having ${otherConditionController.value.text}?';
+    }
+
     Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  color: ConstColors.blue,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 24.w,
-                          height: 24.h,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Container(
-                              width: 16.w,
-                              height: 16.h,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        Text(
-                          'Selected : ${condition.name}',
-                          style: getTextTheme().bodyMedium,
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        // If canceled and no previous date was confirmed, unselect the condition
-                        if (!originalConfirmed) {
-                          condition.isSelected.value = false;
-                        } else {
-                          // Restore original values if there was a previously confirmed date
-                          condition.conditionFromDate.value = originalDate;
-                          condition.dateConfirmed.value = originalConfirmed;
-                        }
-                        Get.back();
-                        update(['conditions_list']);
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 20.sp,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  bottom: 20.h,
-                  left: 10.w,
-                  right: 10.w,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10.sp),
-                    bottomRight: Radius.circular(10.sp),
-                  ),
-                  color: ConstColors.grey.withOpacity(0.3),
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
-                      child: Text(
-                        'Since when are you having ${condition.name}?',
-                        style: getTextTheme(
-                          color: ConstColors.darkGrey,
-                        ).bodyMedium,
-                      ),
-                    ),
-                    ConstYearPicker(
-                      controller: condition.dateController.value,
-                      hintText: 'Select Date',
-                      textStyle: GoogleFonts.content(
-                        fontWeight: FontWeight.w400,
-                        color: ConstColors.darkGrey,
-                        fontSize: 16.sp,
-                      ),
-                      hintStyle: GoogleFonts.content(
-                        fontWeight: FontWeight.w400,
-                        color: ConstColors.grey,
-                        fontSize: 16.sp,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select a date';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        // Parse the date from the format returned by ConstYearPicker (yyyy-MM-dd)
-                        condition.conditionFromDate.value =
-                            DateTime.parse(value);
-                        // Format it according to your desired format (dd/MM/yyyy)
-                        condition.dateController.value.text = dateFormat
-                            .format(condition.conditionFromDate.value!);
-                      },
-                      onSaved: (p0) {},
-                      iconColor: ConstColors.darkGrey,
-                    ),
-                    ConstantButton(
-                      height: 45.h,
-                      horiPadding: 15.w,
-                      vertiPadding: 40.h,
-                      press: () {
-                        if (formKey.currentState?.validate() ?? false) {
-                          if (condition.conditionFromDate.value != null) {
-                            // Mark date as confirmed only when Done is clicked and date is selected
-                            condition.dateConfirmed.value = true;
-                            Get.back();
-                            update(['conditions_list']);
-                          } else {
-                            // Show error or fallback behavior
-                            Get.snackbar(
-                              'Error',
-                              'Please select a date first',
-                              backgroundColor: Colors.red,
-                              colorText: Colors.white,
-                            );
-                          }
-                        }
-                      },
-                      text: "Done",
-                      borderRadius: 8.sp,
-                      color: ConstColors.buttonColor,
-                      bordercolor: ConstColors.buttonColor,
-                      style: getTextTheme(
-                        fontWeight: FontWeight.w500,
-                      ).bodyMedium,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+      ConditionDatePickerDialog(
+        title: title,
+        message: message,
+        dateController: condition.dateController.value,
+        onDateChanged: onDateChanged,
+        onDone: onDone,
+        onCancel: onCancel,
+        formKey: formKey,
+        initialDate: condition.conditionFromDate.value,
       ),
     );
   }
@@ -454,6 +300,8 @@ class PatientHistoryController extends GetxController {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+      log('selected maintenance medications: ${selectedMaintenanceMedications.length}');
+      log('selected rescue medications: ${selectedRescueMedications.length}');
       log('Navigated to page ${currentPageIndex.value}');
       update(['page_container']);
     } else {
@@ -575,12 +423,96 @@ class PatientHistoryController extends GetxController {
       ),
     ];
   }
+
+  // Add medication to either maintenance or rescue list
+  void addMedication(MedicationItem medication, bool isMaintenanceMedication) {
+    if (isMaintenanceMedication) {
+      // Check if medication is already in the list to avoid duplicates
+      if (!selectedMaintenanceMedications
+          .any((med) => med.name == medication.name)) {
+        selectedMaintenanceMedications.add(medication);
+        log('Added ${medication.name} to Maintenance Medications');
+      }
+    } else {
+      if (!selectedRescueMedications
+          .any((med) => med.name == medication.name)) {
+        selectedRescueMedications.add(medication);
+        log('Added ${medication.name} to Rescue Medications');
+      }
+    }
+
+    // Log the current medication lists
+    log('==== CURRENT MEDICATION LISTS ====');
+    log('Maintenance Medications: ${selectedMaintenanceMedications.map((med) => med.name).join(", ")}');
+    log('Rescue Medications: ${selectedRescueMedications.map((med) => med.name).join(", ")}');
+    log('=================================');
+
+    update(['medications_list']);
+  }
+
+  // Remove medication from the appropriate list
+  void removeMedication(
+      MedicationItem medication, bool isMaintenanceMedication) {
+    if (isMaintenanceMedication) {
+      selectedMaintenanceMedications
+          .removeWhere((med) => med.name == medication.name);
+    } else {
+      selectedRescueMedications
+          .removeWhere((med) => med.name == medication.name);
+    }
+    update(['medications_list']);
+  }
+
+  // Set medication frequency
+  void setMedicationFrequency(MedicationItem medication, int value) {
+    medication.frequency.value = value;
+    log('Setting medication frequency for ${medication.name} to: $value');
+    update(['medications_list']);
+  }
+
+  // Set medication dosage
+  void setMedicationDosage(MedicationItem medication, int value) {
+    medication.dosage.value = value;
+    log('Setting medication dosage for ${medication.name} to: $value');
+    update(['medications_list']);
+  }
+
+  // Add reminder for medication
+  void addMedicationReminder(MedicationItem medication, String reminder) {
+    if (!medication.reminders.contains(reminder)) {
+      medication.reminders.add(reminder);
+      update(['medications_list']);
+    }
+  }
+
+  // Remove reminder for medication
+  void removeMedicationReminder(MedicationItem medication, String reminder) {
+    medication.reminders.remove(reminder);
+    update(['medications_list']);
+  }
+
+  // Method to show date picker for "Other" condition after text input
+  void showOtherDatePicker() {
+    // Find the index of the "Other" condition
+    int otherIndex =
+        conditions.indexWhere((condition) => condition.name == 'Other');
+    if (otherIndex != -1 && conditions[otherIndex].isSelected.value) {
+      // Show the date picker dialog for the "Other" condition
+      _showDatePickerDialog(otherIndex);
+      print(
+          'Showing date picker for Other condition: ${otherConditionController.value.text}');
+    }
+  }
 }
 
 class MedicationItem {
   final String name;
   final String subtitle;
   final IconData icon;
+  // Update fields for medication details
+  RxInt frequency = 0.obs; // 0: none, 1: once a day, 2: twice a day
+  RxInt dosage = 0.obs; // 0: none, 1: one puff, 2: two puffs
+  RxList<String> reminders = <String>[].obs;
 
   MedicationItem({
     required this.name,

@@ -28,6 +28,8 @@ class ConstTextField extends StatelessWidget {
   final TextStyle? textStyle;
   final TextStyle? hintStyle;
   final AutovalidateMode? autovalidateMode;
+  final FocusNode? focusNode;
+  final VoidCallback? onEditingComplete;
   const ConstTextField(
       {super.key,
 
@@ -50,7 +52,9 @@ class ConstTextField extends StatelessWidget {
       this.textStyle,
       this.hintStyle,
       this.autovalidateMode,
-      this.mandatoryTitle = ''});
+      this.mandatoryTitle = '',
+      this.focusNode,
+      this.onEditingComplete});
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +68,7 @@ class ConstTextField extends StatelessWidget {
             inputFormatters: inputFormatters,
             keyboardType: keyoardType ?? TextInputType.emailAddress,
             readOnly: readOnly,
+            focusNode: focusNode,
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus?.unfocus();
             },
@@ -132,6 +137,7 @@ class ConstTextField extends StatelessWidget {
             onChanged: onChanged,
             validator: validator,
             onSaved: onSaved,
+            onEditingComplete: onEditingComplete,
           ),
         ],
       ),

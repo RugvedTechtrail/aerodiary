@@ -388,9 +388,10 @@ class PatientController extends GetxController {
 
     if (formKey.currentState!.validate()) {
       isLoading.value = true;
-      Future.delayed(const Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 3), () async {
         isLoading.value = false;
         update(["login"]);
+        await box.write('authToken', 'authToken');
         Get.toNamed('/dashboard_screen');
       });
     } else {

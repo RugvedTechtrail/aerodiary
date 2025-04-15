@@ -19,11 +19,11 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      // GetStorage().read("authToken") != null
-      //     ? Get.offAllNamed('/dashboard_screen')
-      //     : Get.offAllNamed("/login_screen");
+      GetStorage().read("authToken") != null
+          ? Get.offAllNamed('/dashboard_screen')
+          : Get.offAllNamed("/starting_screen");
       // //  Get.offAllNamed("/login_screen");
-      Get.offAllNamed('/starting_screen');
+      // Get.offAllNamed('/starting_screen');
     });
   }
 
