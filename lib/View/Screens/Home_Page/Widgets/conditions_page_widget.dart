@@ -141,147 +141,60 @@ class ConditionsPageWidget extends StatelessWidget {
   }
 
   Widget _buildOtherTextField() {
-    // Create a FocusNode to automatically focus the text field
-    final FocusNode otherFocusNode = FocusNode();
-
     return Obx(() {
-      if (controller.showOtherTextField.value) {
-        // Use Future.delayed to focus the text field after it's built
-        Future.delayed(Duration(milliseconds: 300), () {
-          // Request focus to the text field
-          FocusScope.of(Get.context!).requestFocus(otherFocusNode);
-        });
+      final otherCondition =
+          controller.conditions.firstWhere((c) => c.name == 'Other');
 
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 35.w, right: 15.w, top: 10.h),
-              child: ConstTextField(
-                iconss: const SizedBox(),
-                customText: 'Type other conditions',
-                hintStyle: GoogleFonts.content(
-                  fontWeight: FontWeight.w400,
-                  color: ConstColors.grey,
-                  fontSize: 16.sp,
-                ),
-                textStyle: GoogleFonts.content(
-                  fontWeight: FontWeight.w400,
-                  color: ConstColors.darkGrey,
-                  fontSize: 16.sp,
-                ),
-                controller: controller.otherConditionController.value,
-                validator: controller.validateOther,
-                keyoardType: TextInputType.text,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                    RegExp('[a-zA-Z0-9@#£_&-+.()\$/*":;!?€¥¢^=-]'),
+      if (controller.showOtherTextField.value) {
+        // If "Other" is selected and has date confirmed, show just the condition name and edit button
+        if (otherCondition.dateConfirmed.value &&
+            otherCondition.conditionFromDate.value != null) {
+          return Padding(
+            padding: EdgeInsets.only(left: 35.w, right: 15.w, top: 10.h),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+              decoration: BoxDecoration(
+                color: ConstColors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 18.sp,
+                    color: ConstColors.blue,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      'Other: ${controller.otherConditionController.value.text}',
+                      style: getTextTheme(
+                        color: ConstColors.darkGrey,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ).bodyMedium,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      controller.showOtherDatePicker();
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      size: 18.sp,
+                      color: ConstColors.blue,
+                    ),
                   ),
                 ],
-                onChanged: (value) {
-                  controller.updateOther(value);
-                },
-                onSaved: (value) {
-                  controller.updateOther(value ?? '');
-                },
-                // Add the focusNode parameter to allow focusing
-                focusNode: otherFocusNode,
-                onEditingComplete: () {
-                  // When user finishes editing (pressing done/enter), show date picker
-                  if (controller
-                      .otherConditionController.value.text.isNotEmpty) {
-                    controller.showOtherDatePicker();
-                  }
-                },
               ),
             ),
-            // Add a button to select date for the "Other" condition
-            Obx(() {
-              final otherCondition =
-                  controller.conditions.firstWhere((c) => c.name == 'Other');
-              // Only show the button if text has been entered
-              if (controller.otherConditionController.value.text.isNotEmpty) {
-                return Column(
-                  children: [
-                    // Show selected date if it's been confirmed
-                    if (otherCondition.dateConfirmed.value &&
-                        otherCondition.conditionFromDate.value != null)
-                      Padding(
-                        padding:
-                            EdgeInsets.only(left: 35.w, right: 15.w, top: 5.h),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.h, horizontal: 12.w),
-                          decoration: BoxDecoration(
-                            color: ConstColors.blue.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle,
-                                size: 16.sp,
-                                color: ConstColors.blue,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                'Date: ${controller.dateFormat.format(otherCondition.conditionFromDate.value!)}',
-                                style: getTextTheme(
-                                  color: ConstColors.darkGrey,
-                                  fontSize: 14.sp,
-                                ).bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+          );
+        }
 
-                    // Date selection button
-                    Padding(
-                      padding:
-                          EdgeInsets.only(left: 35.w, right: 15.w, top: 5.h),
-                      child: InkWell(
-                        onTap: () {
-                          controller.showOtherDatePicker();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 10.h),
-                          decoration: BoxDecoration(
-                            color: ConstColors.buttonColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.calendar_today,
-                                size: 16.sp,
-                                color: ConstColors.buttonColor,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                otherCondition.dateConfirmed.value
-                                    ? 'Change Date'
-                                    : 'Select Date',
-                                style: getTextTheme(
-                                  color: ConstColors.buttonColor,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                ).bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            }),
-          ],
-        );
+        // If "Other" is selected but no date has been confirmed yet, show nothing
+        // The dialog will be shown automatically when the condition is selected
+        return const SizedBox.shrink();
       } else {
         return const SizedBox.shrink();
       }

@@ -1,8 +1,10 @@
 import 'package:aerodiary/constants/const_colors.dart';
 import 'package:aerodiary/constants/custom_textstyle.dart';
 import 'package:aerodiary/widgets/constDatePicker.dart';
+import 'package:aerodiary/widgets/constTextField.dart';
 import 'package:aerodiary/widgets/const_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +18,9 @@ class ConditionDatePickerDialog extends StatelessWidget {
   final Function() onCancel;
   final DateTime? initialDate;
   final GlobalKey<FormState> formKey;
+  final bool isOtherCondition;
+  final TextEditingController? otherConditionController;
+  final Function(String)? onOtherConditionChanged;
 
   const ConditionDatePickerDialog({
     Key? key,
@@ -27,6 +32,9 @@ class ConditionDatePickerDialog extends StatelessWidget {
     required this.onCancel,
     required this.formKey,
     this.initialDate,
+    this.isOtherCondition = false,
+    this.otherConditionController,
+    this.onOtherConditionChanged,
   }) : super(key: key);
 
   @override
@@ -131,6 +139,52 @@ class ConditionDatePickerDialog extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
+
+                  // Text field for "Other" condition if needed
+                  if (isOtherCondition && otherConditionController != null)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10.h),
+                      child: ConstTextField(
+                        iconss: const SizedBox(),
+                        customText: 'Type other condition',
+                        hintStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          color: ConstColors.grey,
+                          fontSize: 16.sp,
+                        ),
+                        textStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          color: ConstColors.darkGrey,
+                          fontSize: 16.sp,
+                        ),
+                        controller: otherConditionController!,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please specify the condition';
+                          }
+                          return null;
+                        },
+                        keyoardType: TextInputType.text,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp('[a-zA-Z0-9@#£_&-+.()\$/*":;!?€¥¢^=-]'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (onOtherConditionChanged != null) {
+                            onOtherConditionChanged!(value);
+                          }
+                        },
+                        onSaved: (value) {
+                          if (onOtherConditionChanged != null &&
+                              value != null) {
+                            onOtherConditionChanged!(value);
+                          }
+                        },
+                        // Auto-focus when dialog opens
+                        focusNode: FocusNode()..requestFocus(),
+                      ),
+                    ),
 
                   // Date picker
                   ConstYearPicker(

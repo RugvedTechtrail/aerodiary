@@ -124,32 +124,27 @@ class PatientHistoryController extends GetxController {
       condition.conditionFromDate.value = null;
       condition.dateController.value.clear();
       condition.dateConfirmed.value = false;
-    }
 
-    // If "Other" is selected or unselected, update the text field visibility
-    if (condition.name == 'Other') {
-      showOtherTextField.value = condition.isSelected.value;
-      if (!showOtherTextField.value) {
+      // For "Other" condition, clear text as well
+      if (condition.name == 'Other') {
         otherConditionController.value.clear();
-      } else {
-        // Check if there's text already and show dialog or focus text field
-        if (otherConditionController.value.text.isNotEmpty) {
-          print(
-              'Other selected with existing text: ${otherConditionController.value.text}');
-          // Show date picker if text is already entered
-          Future.delayed(Duration(milliseconds: 100), () {
-            _showDatePickerDialog(index);
-          });
-        } else {
-          print('Other selected, waiting for text input');
-          // We'll focus on text field and wait for input
-          // The showOtherDatePicker() will be called from updateOther()
-        }
+        showOtherTextField.value = false;
       }
-    }
-    // For all other conditions, show date picker dialog when selected
-    else if (condition.isSelected.value) {
-      _showDatePickerDialog(index);
+    } else {
+      // If a condition is selected, show the date picker dialog
+      if (condition.name == 'Other') {
+        // For "Other" condition, show the text field visibility flag
+        showOtherTextField.value = true;
+
+        // Always show the dialog immediately for "Other"
+        // This dialog now includes a text field for condition name
+        Future.delayed(Duration(milliseconds: 100), () {
+          _showDatePickerDialog(index);
+        });
+      } else {
+        // For other conditions, just show the date picker
+        _showDatePickerDialog(index);
+      }
     }
 
     log('Selected condition is ${condition.name}');
@@ -166,6 +161,14 @@ class PatientHistoryController extends GetxController {
     // Store original values to restore if canceled
     final originalDate = condition.conditionFromDate.value;
     final originalConfirmed = condition.dateConfirmed.value;
+    final originalOtherText =
+        condition.name == 'Other' ? otherConditionController.value.text : '';
+
+    // Handle "Other" condition text change
+    void onOtherConditionChanged(String value) {
+      otherConditionController.value.text = value;
+      print('Other condition text updated: $value');
+    }
 
     // Handle date change
     void onDateChanged(String value) {
@@ -185,13 +188,31 @@ class PatientHistoryController extends GetxController {
     // Handle done button press
     void onDone() {
       if (formKey.currentState?.validate() ?? false) {
+        // For "Other" condition, validate the text is entered
+        if (condition.name == 'Other' &&
+            otherConditionController.value.text.isEmpty) {
+          Get.snackbar(
+            'Error',
+            'Please specify the condition',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+          return;
+        }
+
         if (condition.conditionFromDate.value != null) {
           // Mark date as confirmed only when Done is clicked and date is selected
           condition.dateConfirmed.value = true;
           Get.back();
           update(['conditions_list']);
-          print(
-              'Date confirmed for ${condition.name}: ${condition.dateController.value.text}');
+
+          if (condition.name == 'Other') {
+            print(
+                'Other condition: ${otherConditionController.value.text}, date: ${condition.dateController.value.text}');
+          } else {
+            print(
+                'Date confirmed for ${condition.name}: ${condition.dateController.value.text}');
+          }
         } else {
           // Show error or fallback behavior
           Get.snackbar(
@@ -213,21 +234,21 @@ class PatientHistoryController extends GetxController {
         // Restore original values if there was a previously confirmed date
         condition.conditionFromDate.value = originalDate;
         condition.dateConfirmed.value = originalConfirmed;
+
+        // Restore original "Other" text
+        if (condition.name == 'Other') {
+          otherConditionController.value.text = originalOtherText;
+        }
       }
       Get.back();
       update(['conditions_list']);
     }
 
-    // Customize the title and message for the "Other" condition
+    // Customize the title and message
     String title = 'Selected : ${condition.name}';
-    String message = 'Since when are you having ${condition.name}?';
-
-    if (condition.name == 'Other' &&
-        otherConditionController.value.text.isNotEmpty) {
-      title = 'Selected : Other - ${otherConditionController.value.text}';
-      message =
-          'Since when are you having ${otherConditionController.value.text}?';
-    }
+    String message = condition.name == 'Other'
+        ? 'Specify your condition and select since when you have it'
+        : 'Since when are you having ${condition.name}?';
 
     Get.dialog(
       ConditionDatePickerDialog(
@@ -239,6 +260,12 @@ class PatientHistoryController extends GetxController {
         onCancel: onCancel,
         formKey: formKey,
         initialDate: condition.conditionFromDate.value,
+        // Add the following properties for "Other" condition
+        isOtherCondition: condition.name == 'Other',
+        otherConditionController:
+            condition.name == 'Other' ? otherConditionController.value : null,
+        onOtherConditionChanged:
+            condition.name == 'Other' ? onOtherConditionChanged : null,
       ),
     );
   }
