@@ -1,16 +1,13 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:aerodiary/View/Screens/Drugs_Page/View/drugs_page.dart';
 import 'package:aerodiary/View/Screens/Home_Page/View/home_page.dart';
 import 'package:aerodiary/View/Screens/Test_Screen/View/test_screen.dart';
 import 'package:aerodiary/View/Screens/Trends_Page/View/trends_screen.dart';
 import 'package:aerodiary/constants/const_colors.dart';
 import 'package:aerodiary/constants/custom_textstyle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/route_manager.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -64,7 +61,7 @@ class _DashboardPageState extends State<DashboardPage> {
           bottomNavigationBar: Container(
             child: BottomNavigationBar(
               backgroundColor: ConstColors.primary,
-              elevation: 10.sp,
+              elevation: 0.sp,
               type: BottomNavigationBarType.fixed,
               showSelectedLabels: true,
               showUnselectedLabels: true,

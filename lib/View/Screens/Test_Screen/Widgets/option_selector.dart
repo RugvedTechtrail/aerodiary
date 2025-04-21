@@ -24,8 +24,8 @@ class OptionSelector extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 24.w,
-              height: 24.h,
+              width: 22.w,
+              height: 22.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -38,9 +38,9 @@ class OptionSelector extends StatelessWidget {
               child: isSelected
                   ? Center(
                       child: Container(
-                        width: 14.w,
-                        height: 14.h,
-                        decoration: BoxDecoration(
+                        width: 12.w,
+                        height: 12.h,
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: ConstColors.primary,
                         ),
@@ -53,7 +53,7 @@ class OptionSelector extends StatelessWidget {
               optionText,
               style: getTextTheme(
                 color: ConstColors.darkGrey,
-                fontSize: 16.sp,
+                fontSize: 14.sp,
               ).bodyMedium,
             ),
           ],

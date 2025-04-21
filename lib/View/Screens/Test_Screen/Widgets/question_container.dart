@@ -1,5 +1,6 @@
 import 'package:aerodiary/constants/const_colors.dart';
 import 'package:aerodiary/constants/custom_textstyle.dart';
+import 'package:aerodiary/widgets/const_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -31,7 +32,7 @@ class QuestionContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.sp),
         color: ConstColors.white,
       ),
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -43,12 +44,11 @@ class QuestionContainer extends StatelessWidget {
                 color: ConstColors.primary,
                 size: 35.sp,
               ),
-              SizedBox(width: 5.w),
               Text(
                 'Questionnaire, ${DateTime.now().day}${_getDaySuffix(DateTime.now().day)} ${_getMonth(DateTime.now().month)} ${DateTime.now().year}, ${_formatTime(DateTime.now())}',
                 style: TextStyle(
                   color: ConstColors.buttonColor,
-                  fontSize: 16.sp,
+                  fontSize: 15.sp,
                 ),
               ),
             ],
@@ -60,7 +60,7 @@ class QuestionContainer extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
             decoration: BoxDecoration(
-              color: ConstColors.buttonColor,
+              color: ConstColors.blue,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10.sp),
                 topRight: Radius.circular(10.sp),
@@ -71,8 +71,8 @@ class QuestionContainer extends StatelessWidget {
               style: getTextTheme(
                 color: ConstColors.white,
                 fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ).bodyLarge,
+                //  fontWeight: FontWeight.w500,
+              ).bodyMedium,
             ),
           ),
 
@@ -95,7 +95,7 @@ class QuestionContainer extends StatelessWidget {
                   questionText,
                   style: getTextTheme(
                     color: ConstColors.darkGrey,
-                    fontSize: 16.sp,
+                    fontSize: 14.sp,
                   ).bodyMedium,
                 ),
 
@@ -111,51 +111,77 @@ class QuestionContainer extends StatelessWidget {
 
           // Back button (if it's not the first question)
           if (onBack != null)
-            Container(
-              width: double.infinity,
-              height: 50.h,
-              margin: EdgeInsets.only(bottom: 10.h),
-              child: ElevatedButton(
-                onPressed: onBack,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ConstColors.buttonColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.sp),
-                  ),
-                ),
-                child: Text(
-                  'Back',
-                  style: getTextTheme(
-                    color: ConstColors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                  ).bodyLarge,
-                ),
-              ),
+            ConstantButton(
+              height: 45.h,
+              horiPadding: 15.w,
+              vertiPadding: 40.h,
+              press: onBack,
+              text: "Back",
+              borderRadius: 8.sp,
+              color: ConstColors.buttonColor,
+              bordercolor: ConstColors.buttonColor,
+              style: getTextTheme(
+                fontWeight: FontWeight.w500,
+              ).bodyMedium,
             ),
+          // Container(
+          //   width: double.infinity,
+          //   height: 50.h,
+          //   margin: EdgeInsets.only(bottom: 10.h),
+          //   child: ElevatedButton(
+          //     onPressed: onBack,
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: ConstColors.buttonColor,
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(5.sp),
+          //       ),
+          //     ),
+          //     child: Text(
+          //       'Back',
+          //       style: getTextTheme(
+          //         color: ConstColors.white,
+          //         fontSize: 16.sp,
+          //         fontWeight: FontWeight.w500,
+          //       ).bodyLarge,
+          //     ),
+          //   ),
+          // ),
 
           // Next/Done button
-          Container(
-            width: double.infinity,
-            height: 50.h,
-            margin: EdgeInsets.only(bottom: 30.h),
-            child: ElevatedButton(
-              onPressed: onNext,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ConstColors.buttonColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.sp),
-                ),
-              ),
-              child: Text(
-                isLastQuestion ? 'Done' : 'Next',
-                style: getTextTheme(
-                  color: ConstColors.white,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ).bodyLarge,
-              ),
-            ),
+          // Container(
+          //   width: double.infinity,
+          //   height: 50.h,
+          //   margin: EdgeInsets.only(bottom: 30.h),
+          //   child: ElevatedButton(
+          //     onPressed: onNext,
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: ConstColors.buttonColor,
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(5.sp),
+          //       ),
+          //     ),
+          //     child: Text(
+          //       isLastQuestion ? 'Done' : 'Next',
+          //       style: getTextTheme(
+          //         color: ConstColors.white,
+          //         fontSize: 16.sp,
+          //         fontWeight: FontWeight.w500,
+          //       ).bodyLarge,
+          //     ),
+          //   ),
+          // ),
+          ConstantButton(
+            height: 45.h,
+            horiPadding: 15.w,
+            vertiPadding: 10.h,
+            press: onNext,
+            text: isLastQuestion ? 'Done' : 'Next',
+            borderRadius: 8.sp,
+            color: ConstColors.buttonColor,
+            bordercolor: ConstColors.buttonColor,
+            style: getTextTheme(
+              fontWeight: FontWeight.w500,
+            ).bodyMedium,
           ),
         ],
       ),

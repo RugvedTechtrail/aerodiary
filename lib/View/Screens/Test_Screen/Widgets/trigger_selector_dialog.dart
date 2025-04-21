@@ -21,10 +21,6 @@ class TriggerSelectorDialog extends StatelessWidget {
     }
 
     return Container(
-      width: double.infinity,
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8),
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
       decoration: BoxDecoration(
         color: ConstColors.white,
         borderRadius: BorderRadius.circular(10.sp),
@@ -37,8 +33,11 @@ class TriggerSelectorDialog extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 15.w),
             decoration: BoxDecoration(
-              color: ConstColors.buttonColor,
-              borderRadius: BorderRadius.circular(5.sp),
+              color: ConstColors.blue,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.sp),
+                topRight: Radius.circular(10.sp),
+              ),
             ),
             child: Text(
               'Selected: Yes',
@@ -49,105 +48,125 @@ class TriggerSelectorDialog extends StatelessWidget {
               ).bodyLarge,
             ),
           ),
-          SizedBox(height: 10.h),
-          Text(
-            'Please Select your triggers',
-            style: getTextTheme(
-              color: ConstColors.darkGrey,
-              fontSize: 16.sp,
-            ).bodyMedium,
-          ),
-          Text(
-            '(Multiple Choice)',
-            style: getTextTheme(
-              color: ConstColors.darkGrey.withOpacity(0.7),
-              fontSize: 14.sp,
-            ).bodySmall,
-          ),
-          SizedBox(height: 10.h),
 
-          // List of triggers - use Flexible + SingleChildScrollView
-          Flexible(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...controller.triggersList
-                      .map((trigger) => Obx(() => _buildTriggerOption(
-                            trigger,
-                            controller.selectedTriggers.contains(trigger),
-                            (isSelected) {
-                              controller.toggleSelectedTrigger(
-                                  trigger, isSelected);
-                            },
-                            trigger == 'Others'
-                                ? Obx(() => controller.selectedTriggers
-                                        .contains('Others')
-                                    ? TextField(
-                                        onChanged:
-                                            controller.updateOtherTrigger,
-                                        decoration: InputDecoration(
-                                          hintText: 'Specify other triggers',
-                                          hintStyle: TextStyle(
-                                            color: ConstColors.darkGrey
-                                                .withOpacity(0.5),
-                                            fontSize: 14.sp,
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.sp),
-                                            borderSide: BorderSide(
-                                              color: ConstColors.darkGrey
-                                                  .withOpacity(0.3),
-                                            ),
-                                          ),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 10.w,
-                                            vertical: 5.h,
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox.shrink())
-                                : null,
-                          )))
-                      .toList(),
-                ],
+          Container(
+            padding: EdgeInsets.all(10.sp),
+            decoration: BoxDecoration(
+              color: ConstColors.grey.withOpacity(0.5),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10.sp),
+                bottomRight: Radius.circular(10.sp),
               ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Please Select your triggers',
+                  style: getTextTheme(
+                    color: ConstColors.darkGrey,
+                    fontSize: 16.sp,
+                  ).bodyMedium,
+                ),
+                Text(
+                  '(Multiple Choice)',
+                  style: getTextTheme(
+                    color: ConstColors.darkGrey.withOpacity(0.7),
+                    fontSize: 14.sp,
+                  ).bodySmall,
+                ),
+                SizedBox(height: 10.h),
+
+                // List of triggers - use Container with fixed height instead of Flexible
+                Container(
+                  height: 200.h, // Fixed height
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...controller.triggersList
+                            .map((trigger) => Obx(() => _buildTriggerOption(
+                                  trigger,
+                                  controller.selectedTriggers.contains(trigger),
+                                  (isSelected) {
+                                    controller.toggleSelectedTrigger(
+                                        trigger, isSelected);
+                                  },
+                                  trigger == 'Others'
+                                      ? Obx(() => controller.selectedTriggers
+                                              .contains('Others')
+                                          ? TextField(
+                                              onChanged:
+                                                  controller.updateOtherTrigger,
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Specify other triggers',
+                                                hintStyle: TextStyle(
+                                                  color: ConstColors.darkGrey
+                                                      .withOpacity(0.5),
+                                                  fontSize: 14.sp,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.sp),
+                                                  borderSide: BorderSide(
+                                                    color: ConstColors.darkGrey
+                                                        .withOpacity(0.3),
+                                                  ),
+                                                ),
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                  horizontal: 10.w,
+                                                  vertical: 5.h,
+                                                ),
+                                              ),
+                                            )
+                                          : const SizedBox.shrink())
+                                      : null,
+                                )))
+                            .toList(),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Container(
+                  width: double.infinity,
+                  height: 45.h,
+                  margin: EdgeInsets.symmetric(vertical: 15.w),
+                  child: Obx(() => ElevatedButton(
+                        onPressed: _isValidSelection()
+                            ? () {
+                                // Go back to the main flow and continue
+                                Get.back();
+                                controller.nextQuestion();
+                              }
+                            : null, // Disable button if no triggers selected or "Others" selected but no text
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ConstColors.buttonColor,
+                          disabledBackgroundColor:
+                              ConstColors.darkGrey.withOpacity(0.3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.sp),
+                          ),
+                        ),
+                        child: Text(
+                          'Next',
+                          style: getTextTheme(
+                            color: ConstColors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ).bodyLarge,
+                        ),
+                      )),
+                ),
+              ],
             ),
           ),
 
-          SizedBox(height: 10.h),
-
           // Next button
-          Container(
-            width: double.infinity,
-            height: 45.h,
-            child: Obx(() => ElevatedButton(
-                  onPressed: _isValidSelection()
-                      ? () {
-                          // Go back to the main flow and continue
-                          Get.back();
-                          controller.nextQuestion();
-                        }
-                      : null, // Disable button if no triggers selected or "Others" selected but no text
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ConstColors.buttonColor,
-                    disabledBackgroundColor:
-                        ConstColors.darkGrey.withOpacity(0.3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.sp),
-                    ),
-                  ),
-                  child: Text(
-                    'Next',
-                    style: getTextTheme(
-                      color: ConstColors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                    ).bodyLarge,
-                  ),
-                )),
-          ),
         ],
       ),
     );
@@ -180,14 +199,14 @@ class TriggerSelectorDialog extends StatelessWidget {
         InkWell(
           onTap: () => onChanged(!isSelected),
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 5.h),
+            margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: 24.w,
                   height: 24.h,
-                  margin: EdgeInsets.only(top: 2.h),
+                  margin: EdgeInsets.only(top: 8.h),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -202,7 +221,7 @@ class TriggerSelectorDialog extends StatelessWidget {
                           child: Container(
                             width: 14.w,
                             height: 14.h,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: ConstColors.primary,
                             ),
@@ -216,7 +235,7 @@ class TriggerSelectorDialog extends StatelessWidget {
                     trigger,
                     style: getTextTheme(
                       color: ConstColors.darkGrey,
-                      fontSize: 15.sp,
+                      fontSize: 14.sp,
                     ).bodyMedium,
                     softWrap: true,
                     overflow: TextOverflow.visible,

@@ -20,7 +20,6 @@ class RescueFrequencyDialog extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.w),
       decoration: BoxDecoration(
         color: ConstColors.white,
         borderRadius: BorderRadius.circular(10.sp),
@@ -33,7 +32,7 @@ class RescueFrequencyDialog extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
             decoration: BoxDecoration(
-              color: ConstColors.buttonColor,
+              color: ConstColors.blue,
               borderRadius: BorderRadius.circular(5.sp),
             ),
             child: Text(
@@ -45,56 +44,81 @@ class RescueFrequencyDialog extends StatelessWidget {
               ).bodyLarge,
             ),
           ),
-          SizedBox(height: 15.h),
-          Text(
-            'How many times did you need to use your rescue, or quickrelief medication today ?',
-            style: getTextTheme(
-              color: ConstColors.darkGrey,
-              fontSize: 16.sp,
-            ).bodyMedium,
-          ),
-          SizedBox(height: 10.h),
-
-          // List of frequency options
-          ...controller.rescueFrequency
-              .map((frequency) => Obx(() => _buildFrequencyOption(
-                    frequency,
-                    controller.rescueInhalerAnswer.value == frequency,
-                    () => controller.setRescueFrequency(frequency),
-                  )))
-              .toList(),
-
-          SizedBox(height: 15.h),
-
-          // Next button
           Container(
-            width: double.infinity,
-            height: 50.h,
-            child: Obx(() => ElevatedButton(
-                  onPressed: controller.rescueInhalerAnswer.value.isNotEmpty
-                      ? () {
-                          // Go back to the main flow and continue
-                          Get.back();
-                          controller.nextQuestion();
-                        }
-                      : null, // Disable button if no frequency selected
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ConstColors.buttonColor,
-                    disabledBackgroundColor:
-                        ConstColors.darkGrey.withOpacity(0.3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.sp),
+            padding: EdgeInsets.all(10.sp),
+            decoration: BoxDecoration(
+              color: ConstColors.grey.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(8.sp),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'How many times did you need to use your rescue, or quickrelief medication today ?',
+                  style: getTextTheme(
+                    color: ConstColors.darkGrey,
+                    fontSize: 16.sp,
+                  ).bodyMedium,
+                ),
+                SizedBox(height: 10.h),
+
+                // List of frequency options
+                Container(
+                  height: 180.h,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...controller.rescueFrequency
+                            .map((frequency) => Obx(() => _buildFrequencyOption(
+                                  frequency,
+                                  controller.rescueInhalerAnswer.value ==
+                                      frequency,
+                                  () =>
+                                      controller.setRescueFrequency(frequency),
+                                )))
+                            .toList(),
+                      ],
                     ),
                   ),
-                  child: Text(
-                    'Next',
-                    style: getTextTheme(
-                      color: ConstColors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                    ).bodyLarge,
-                  ),
-                )),
+                ),
+
+                SizedBox(height: 15.h),
+
+                // Next button
+                Container(
+                  width: double.infinity,
+                  height: 50.h,
+                  child: Obx(() => ElevatedButton(
+                        onPressed: controller
+                                .rescueInhalerAnswer.value.isNotEmpty
+                            ? () {
+                                // Go back to the main flow and continue
+                                Get.back();
+                                controller.nextQuestion();
+                              }
+                            : null, // Disable button if no frequency selected
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ConstColors.buttonColor,
+                          disabledBackgroundColor:
+                              ConstColors.darkGrey.withOpacity(0.3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.sp),
+                          ),
+                        ),
+                        child: Text(
+                          'Next',
+                          style: getTextTheme(
+                            color: ConstColors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ).bodyLarge,
+                        ),
+                      )),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -109,7 +133,7 @@ class RescueFrequencyDialog extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5.h),
+        margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
         child: Row(
           children: [
             Container(

@@ -88,23 +88,25 @@ class MedicationDetailsWidget extends StatelessWidget {
                 children: [
                   // Header with medication name
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
-                    decoration: BoxDecoration(
-                      color: ConstColors.blue,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          '${medication.name}: ${medication.subtitle}',
-                          style: getTextTheme(
-                            color: Colors.white,
-                          ).bodyMedium,
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.h, horizontal: 15.w),
+                      decoration: BoxDecoration(
+                        color: ConstColors.blue,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            Text(
+                              '${medication.name}: ${medication.subtitle}',
+                              style: getTextTheme(
+                                color: Colors.white,
+                              ).bodyMedium,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      )),
 
                   // Medication icon and dosage count
                   Container(

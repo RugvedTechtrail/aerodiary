@@ -9,7 +9,6 @@ import 'package:aerodiary/View/Screens/Starting_Page/starting_page.dart';
 import 'package:aerodiary/View/Screens/Test_Screen/Bindings/test_bindings.dart';
 import 'package:aerodiary/View/Screens/Test_Screen/View/test_screen.dart';
 import 'package:aerodiary/View/Screens/Welcome_Page/welcome_page.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 

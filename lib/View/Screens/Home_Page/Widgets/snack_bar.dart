@@ -1,12 +1,9 @@
 import 'package:aerodiary/View/Screens/Home_Page/Controller/home_patient_controller.dart';
 import 'package:aerodiary/constants/const_colors.dart';
 import 'package:aerodiary/constants/custom_textstyle.dart';
-import 'package:aerodiary/widgets/constDatePicker.dart';
-import 'package:aerodiary/widgets/const_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomDialog {
   static void showDiaog(PatientHistoryController controller) {

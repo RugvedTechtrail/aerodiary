@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:aerodiary/constants/const_colors.dart';
 import 'package:aerodiary/constants/custom_textstyle.dart';
-import 'package:aerodiary/widgets/mandetory.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
