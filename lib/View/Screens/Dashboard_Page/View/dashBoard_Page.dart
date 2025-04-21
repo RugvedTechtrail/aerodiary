@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:aerodiary/View/Screens/Drugs_Page/View/drugs_page.dart';
 import 'package:aerodiary/View/Screens/Home_Page/View/home_page.dart';
+import 'package:aerodiary/View/Screens/Test_Screen/View/test_screen.dart';
 import 'package:aerodiary/View/Screens/Trends_Page/View/trends_screen.dart';
 import 'package:aerodiary/constants/const_colors.dart';
 import 'package:aerodiary/constants/custom_textstyle.dart';
@@ -32,7 +33,7 @@ class _DashboardPageState extends State<DashboardPage> {
     // Initialize the pages
     widgetOptions = [
       const HomePage(),
-      const DrugsPage(),
+      const TestScreen(),
       const TrendsScreen(),
     ];
   }

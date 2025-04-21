@@ -527,6 +527,15 @@ class PatientScreen extends StatelessWidget {
                                       : controller.gender.value,
                                   validator: controller.validateGender,
                                   icon: const SizedBox(),
+                                  hint: Text(
+                                    'Gender',
+                                    style: GoogleFonts.content(
+                                      fontWeight: FontWeight.w400,
+                                      color: ConstColors
+                                          .grey, // This should force the color
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
                                   decoration: InputDecoration(
                                     suffixIcon: Icon(
                                       Icons.arrow_drop_down_sharp,
@@ -563,7 +572,8 @@ class PatientScreen extends StatelessWidget {
                                     hintText: 'Gender',
                                     hintStyle: GoogleFonts.content(
                                       fontWeight: FontWeight.w400,
-                                      color: ConstColors.grey,
+                                      color: ConstColors
+                                          .blue, // Changed back to blue as requested
                                       fontSize: 16.sp,
                                     ),
                                     contentPadding: EdgeInsets.symmetric(
@@ -609,6 +619,13 @@ class PatientScreen extends StatelessWidget {
                                   },
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
+                                  style: GoogleFonts.content(
+                                    // Add this explicit style
+                                    fontWeight: FontWeight.w400,
+                                    color: ConstColors.grey,
+                                    fontSize: 16.sp,
+                                  ),
+                                  dropdownColor: ConstColors.white,
                                 ),
                               ),
                               // Email

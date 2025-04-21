@@ -3,8 +3,11 @@ import 'package:aerodiary/View/Screens/Patient_Screen/Bindings/patient_bindings.
 import 'package:aerodiary/View/Screens/Patient_Screen/View/patient_screen.dart';
 import 'package:aerodiary/View/Screens/Resistration_Page/Bindings/resistration_bindings.dart';
 import 'package:aerodiary/View/Screens/Resistration_Page/View/registration_page.dart';
+import 'package:aerodiary/View/Screens/Result_Screen/View/result_screen.dart';
 import 'package:aerodiary/View/Screens/Splash_Screen/splash_screen.dart';
 import 'package:aerodiary/View/Screens/Starting_Page/starting_page.dart';
+import 'package:aerodiary/View/Screens/Test_Screen/Bindings/test_bindings.dart';
+import 'package:aerodiary/View/Screens/Test_Screen/View/test_screen.dart';
 import 'package:aerodiary/View/Screens/Welcome_Page/welcome_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -31,13 +34,24 @@ class Routes {
         name: '/dashboard_screen',
         page: () => const DashboardPage(),
         bindings: [
+          TestScreenBindings()
           // DashBoardBinding(),
           // HomeBinding(),
           // AdminHomeScreenBinding()
         ]),
     GetPage(
-        name: '/patient_screen',
-        page: () => const PatientScreen(),
-        bindings: [PatientBindings()]),
+      name: '/patient_screen',
+      page: () => const PatientScreen(),
+      bindings: [PatientBindings()],
+    ),
+    GetPage(
+      name: '/test_screen',
+      page: () => const TestScreen(),
+      bindings: [TestScreenBindings()],
+    ),
+    GetPage(
+      name: '/result_screen',
+      page: () => const ResultScreen(),
+    ),
   ];
 }

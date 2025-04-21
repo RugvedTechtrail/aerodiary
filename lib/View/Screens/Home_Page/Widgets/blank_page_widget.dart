@@ -177,6 +177,7 @@ class BlankPageWidget extends StatelessWidget {
           ConstantButton(
             press: () {
               if (isSummary) {
+                Get.toNamed('/test_screen');
                 // Submit form if it's the last page
                 Get.snackbar(
                   'Success',

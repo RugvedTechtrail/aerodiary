@@ -331,6 +331,11 @@ class PatientController extends GetxController {
     if (!GetUtils.isPhoneNumber(value)) {
       return 'Please enter a valid mobile number';
     }
+    final mobileRegExp =
+        RegExp(r'^[7-9]\d{9}$'); // Indian mobile number pattern
+    if (!mobileRegExp.hasMatch(value)) {
+      return 'Enter a valid mobile number';
+    }
     return null;
   }
 

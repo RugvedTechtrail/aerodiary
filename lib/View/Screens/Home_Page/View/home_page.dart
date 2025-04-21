@@ -53,27 +53,26 @@ class HomePage extends StatelessWidget {
         backgroundColor: ConstColors.primary,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.sp),
-            color: ConstColors.white,
-          ),
-          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header with back button
-              HomeHeaderWidget(
-                onBackPressed: () {
-                  // Handle back button press (e.g., navigate back to dashboard)
-                  Get.back();
-                },
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.sp),
+          color: ConstColors.white,
+        ),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with back button
+            HomeHeaderWidget(
+              onBackPressed: () {
+                // Handle back button press (e.g., navigate back to dashboard)
+                Get.back();
+              },
+            ),
 
-              // Optional: Progress indicator
-              // Uncomment if you want to show progress
-              /*
+            // Optional: Progress indicator
+            // Uncomment if you want to show progress
+            /*
               Obx(() => LinearProgressIndicator(
                     value: (controller.currentPageIndex.value + 1) /
                         controller.totalPages,
@@ -93,10 +92,9 @@ class HomePage extends StatelessWidget {
               ),
               */
 
-              // Main Content with PageView
-              PageViewContainerWidget(controller: controller),
-            ],
-          ),
+            // Main Content with PageView
+            PageViewContainerWidget(controller: controller),
+          ],
         ),
       ),
     );
